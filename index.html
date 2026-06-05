@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revizyon ve Eksik Listesi</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #f5f5f7;
+    color: #1e293b;
+    padding: 2rem 1rem;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
+  .info-box {
+    background: #eef2ff;
+    border-left: 4px solid #3b82f6;
+    border-radius: 10px;
+    padding: .85rem 1.2rem;
+    font-size: 14px;
+    color: #1e40af;
+    margin-bottom: 1.5rem;
+  }
+  .meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 1.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .meta-table td {
+    padding: .65rem .9rem;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .meta-table td:first-child { color: #475569; width: 140px; font-weight: 600; }
+  .badge-high {
+    display: inline-block;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 11px;
+    padding: 2px 12px;
+    border-radius: 30px;
+    font-weight: 700;
+  }
+  .progress-bar-wrap { margin-bottom: 1.8rem; background: #fff; padding: 0.75rem 1rem; border-radius: 20px; border: 1px solid #edf2f7; }
+  .progress-label {
+    font-size: 13px;
+    color: #334155;
+    margin-bottom: .5rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-track {
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #3b82f6;
+    border-radius: 20px;
+    transition: width 0.35s;
+  }
+  .section {
+    border: 1px solid #e2edf2;
+    border-radius: 18px;
+    margin-bottom: 1.1rem;
+    background: #fff;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 1rem 1.3rem;
+  }
+  .check-wrap {
+    flex-shrink: 0;
+    margin-top: 2px;
+    pointer-events: none;
+  }
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: default;
+    pointer-events: none;
+    accent-color: #3b82f6;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.4;
+    flex: 1;
+  }
+  .section-title.done {
+    text-decoration: line-through;
+    color: #94a3b8;
+  }
+  .status-badge {
+    display: inline-block;
+    margin-left: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    background: #e6f7e6;
+    color: #2e7d32;
+    padding: 2px 10px;
+    border-radius: 30px;
+  }
+  .status-badge.pending { background: #fff0e6; color: #b45309; }
+  .section-body {
+    padding: 0 1.3rem 1.1rem 1.3rem;
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.65;
+    border-top: 1px solid #f0f4f9;
+  }
+  .section-body p { margin-top: .6rem; }
+  .section-body blockquote {
+    border-left: 3px solid #cbd5e1;
+    padding-left: .85rem;
+    margin: .65rem 0;
+    color: #475569;
+    background: #fafcff;
+  }
+  .section-body ul { margin: .4rem 0 .4rem 1.4rem; }
+  .section-body li { margin-bottom: .3rem; }
+  .footer {
+    margin-top: 2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid #e2edf2;
+    font-size: 13px;
+    color: #64748b;
+    text-align: center;
+  }
+  .note-readonly {
+    background: #f8fafc;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    display: inline-block;
+  }
+  .image-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #3b82f6;
+    border: none;
+    border-radius: 30px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.2s;
+  }
+  .image-btn:hover { background: #2563eb; }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.85);
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    background: transparent;
+    position: relative;
+  }
+  .modal-content img {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 12px;
+    box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+  }
+  .close-modal {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    background: rgba(0,0,0,0.5);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-caption {
+    text-align: center;
+    color: white;
+    margin-top: 12px;
+    font-size: 14px;
+    background: rgba(0,0,0,0.6);
+    padding: 6px 16px;
+    border-radius: 30px;
+    display: inline-block;
+  }
+  .caption-wrapper { text-align: center; }
+  .test-image-box {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
+    <h1>📋 Revizyon ve Eksik Listesi</h1>
+    <div class="note-readonly">⛔ Yalnızca izleme modu</div>
+  </div>
+
+  <div class="info-box">
+    📌 Bu doküman, canlı ortam testleri sırasında tespit edilen kritik eksikliklerin listesidir.<br>
+    🖼️ <strong>2, 5, 6, 7. maddelerin görselleri vardır.</strong> Mavi butona tıklayın.
+  </div>
+
+  <table class="meta-table">
+    <tr><td>Doküman Türü</td><td>Revizyon ve Eksik Listesi</td></tr>
+    <tr><td>Kapsam</td><td>Web sitesi, yönetim paneli ve mobil uygulama</td></tr>
+    <tr><td>Toplam Madde</td><td id="total-items">-</td></tr>
+    <tr><td>Öncelik</td><td><span class="badge-high">Yüksek</span></td></tr>
+  </table>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-label">
+      <span>✅ Tamamlanan maddeler</span>
+      <span id="prog-text">0 / 0</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div id="sections-container"></div>
+
+  <div class="footer">
+    Görsel dosyaları: <strong>2.png , 5.png , 6.jpeg , 7.jpeg</strong> (aynı klasörde olmalı)
+  </div>
+</div>
+
+<div id="imageModal" class="modal" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="close-modal" onclick="closeModal()">&times;</span>
+    <img id="modalImage" src="" alt="Madde görseli">
+    <div class="caption-wrapper"><div class="modal-caption" id="modalCaption"></div></div>
+  </div>
+</div>
+
+<script>
+const revisionData = {
+  "items": [
+    { "id": 1, "title": "Kayıt Ekranı: Mevzuat ve Şart Onayları", "completed": false, "hasImage": false,
+      "details": { "description": "Kayıt formuna zorunlu onay kutucukları eklenmelidir.", "listItems": ["Aydınlatma Metni", "Güvenlik Kuralları", "Davranış Kuralları"] } },
+    { "id": 2, "title": "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası", "completed": false, "hasImage": true, "imageFile": "2.png",
+      "details": { "description": "Eğitim durumu bilgisi sisteme hatalı yansımaktadır.", "extraParagraph": "Veritabanı ile arayüz eşleşmesi sağlanmalıdır." } },
+    { "id": 3, "title": "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)", "completed": true, "hasImage": false,
+      "details": { "description": "15 yaşından küçüklerin kaydı engellenmelidir.", "blockquote": "En az 15 yaşında olmalısınız." } },
+    { "id": 4, "title": "Mola Yönetimi: Ardışık Mola Engelleme", "completed": false, "hasImage": false,
+      "details": { "description": "Mola bitişi ile yeni mola arasında süre kısıtlaması eklenmeli." } },
+    { "id": 5, "title": "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği", "completed": false, "hasImage": true, "imageFile": "5.png",
+      "details": { "description": "Üye bilgileri düzenlenemiyor.", "blockquote": "Üyelik düzenleme özelliği eklenmedi." } },
+    { "id": 6, "title": "Mobil Uygulama: Rezervasyon Hatası", "completed": false, "hasImage": true, "imageFile": "6.jpeg",
+      "details": { "description": "Uygun saatler bulunamadı hatası alınıyor.", "blockquote": "Uygun saatler bulunamadı." } },
+    { "id": 7, "title": "İkinci Telefon Numarası Zorunluluğu", "completed": true, "hasImage": true, "imageFile": "7.jpeg",
+      "details": { "description": "Kayıt formuna ikinci telefon alanı eklenmeli.", "blockquote": "Lütfen ikinci telefon numaranızı giriniz." } }
+  ]
+};
+
+function showImageModal(src, title) {
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+  const modalCaption = document.getElementById('modalCaption');
+  modalImg.src = src;
+  modalCaption.textContent = title;
+  modal.style.display = 'flex';
+  modalImg.onerror = function() {
+    modalImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect width="300" height="200" fill="%23fee2e2"/%3E%3Ctext x="150" y="110" text-anchor="middle" fill="%23b91c1c"%3EGörsel bulunamadı: ' + src + '%3C/text%3E%3C/svg%3E';
+    modalCaption.textContent = title + ' - Görsel dosyası eksik: ' + src;
+  };
+}
+function closeModal() { document.getElementById('imageModal').style.display = 'none'; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function renderSections() {
+  const container = document.getElementById('sections-container');
+  const items = revisionData.items;
+  const total = items.length;
+  document.getElementById('total-items').innerText = total;
+  const completedCount = items.filter(i => i.completed).length;
+  document.getElementById('prog-text').innerText = `${completedCount} / ${total}`;
+  document.getElementById('prog-fill').style.width = (completedCount/total*100)+'%';
+  container.innerHTML = '';
+  items.forEach(item => {
+    const section = document.createElement('div');
+    section.className = 'section';
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    const checkWrap = document.createElement('div');
+    checkWrap.className = 'check-wrap';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = item.completed;
+    cb.disabled = true;
+    checkWrap.appendChild(cb);
+    const titleSpan = document.createElement('div');
+    titleSpan.className = 'section-title';
+    titleSpan.innerHTML = `${item.id}. ${item.title}`;
+    if (item.completed) { titleSpan.classList.add('done'); titleSpan.innerHTML += '<span class="status-badge">✓ tamamlandı</span>'; }
+    else { titleSpan.innerHTML += '<span class="status-badge pending">bekliyor</span>'; }
+    header.appendChild(checkWrap);
+    header.appendChild(titleSpan);
+    const body = document.createElement('div');
+    body.className = 'section-body';
+    const d = item.details;
+    if (d.description) { const p = document.createElement('p'); p.innerHTML = d.description; body.appendChild(p); }
+    if (d.listItems) { const ul = document.createElement('ul'); d.listItems.forEach(li => { const l = document.createElement('li'); l.innerHTML = li; ul.appendChild(l); }); body.appendChild(ul); }
+    if (d.blockquote) { const bq = document.createElement('blockquote'); bq.innerHTML = d.blockquote; body.appendChild(bq); }
+    if (d.extraParagraph) { const ep = document.createElement('p'); ep.innerHTML = d.extraParagraph; body.appendChild(ep); }
+    if (item.hasImage && item.imageFile) {
+      const btn = document.createElement('button');
+      btn.className = 'image-btn';
+      btn.innerHTML = '🖼️ Görseli Göster (' + item.imageFile + ')';
+      btn.onclick = (function(f, t) { return function() { showImageModal(f, t); }; })(item.imageFile, item.title);
+      body.appendChild(btn);
+    }
+    section.appendChild(header);
+    section.appendChild(body);
+    container.appendChild(section);
+  });
+}
+window.addEventListener('DOMContentLoaded', renderSections);
+</script>
+</body>
+</html>

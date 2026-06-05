@@ -130,7 +130,13 @@
     background: #fafcff;
   }
   .section-body ul { margin: .4rem 0 .4rem 1.4rem; }
-  .section-body li { margin-bottom: .3rem; }
+  .section-body li { margin-bottom: .3rem; word-break: break-word; }
+  .section-body li a {
+    color: #2563eb;
+    text-decoration: none;
+    border-bottom: 1px dashed #94a3b8;
+  }
+  .section-body li a:hover { color: #1e40af; border-bottom-color: #3b82f6; }
   .footer {
     margin-top: 2rem;
     padding-top: 1.2rem;
@@ -213,17 +219,10 @@
     display: inline-block;
   }
   .caption-wrapper { text-align: center; }
-  .test-image-box {
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 12px;
-    margin-top: 10px;
+  @media (max-width: 640px) {
+    .section-header { padding: 0.85rem 1rem; }
+    .section-body { padding: 0 1rem 1rem 1rem; }
+    .section-title { font-size: 13.5px; }
   }
 </style>
 </head>
@@ -258,7 +257,6 @@
 
   <div id="sections-container"></div>
 
-
 </div>
 
 <div id="imageModal" class="modal" onclick="closeModal()">
@@ -272,20 +270,85 @@
 <script>
 const revisionData = {
   "items": [
-    { "id": 1, "title": "Kayıt Ekranı: Mevzuat ve Şart Onayları", "completed": false, "hasImage": false,
-      "details": { "description": "Kayıt formuna zorunlu onay kutucukları eklenmelidir.", "listItems": ["Aydınlatma Metni", "Güvenlik Kuralları", "Davranış Kuralları"] } },
-    { "id": 2, "title": "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası", "completed": false, "hasImage": true, "imageFile": "2.png",
-      "details": { "description": "Eğitim durumu bilgisi sisteme hatalı yansımaktadır.", "extraParagraph": "Veritabanı ile arayüz eşleşmesi sağlanmalıdır." } },
-    { "id": 3, "title": "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)", "completed": true, "hasImage": false,
-      "details": { "description": "15 yaşından küçüklerin kaydı engellenmelidir.", "blockquote": "En az 15 yaşında olmalısınız." } },
-    { "id": 4, "title": "Mola Yönetimi: Ardışık Mola Engelleme", "completed": false, "hasImage": false,
-      "details": { "description": "Mola bitişi ile yeni mola arasında süre kısıtlaması eklenmeli." } },
-    { "id": 5, "title": "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği", "completed": false, "hasImage": true, "imageFile": "5.png",
-      "details": { "description": "Üye bilgileri düzenlenemiyor.", "blockquote": "Üyelik düzenleme özelliği eklenmedi." } },
-    { "id": 6, "title": "Mobil Uygulama: Rezervasyon Hatası", "completed": false, "hasImage": true, "imageFile": "6.jpeg",
-      "details": { "description": "Uygun saatler bulunamadı hatası alınıyor.", "blockquote": "Uygun saatler bulunamadı." } },
-    { "id": 7, "title": "İkinci Telefon Numarası Zorunluluğu", "completed": true, "hasImage": true, "imageFile": "7.jpeg",
-      "details": { "description": "Kayıt formuna ikinci telefon alanı eklenmeli.", "blockquote": "Lütfen ikinci telefon numaranızı giriniz." } }
+    { 
+      "id": 1, 
+      "title": "Kayıt Ekranı: Mevzuat ve Şart Onayları", 
+      "completed": false, 
+      "hasImage": false,
+      "details": { 
+        "description": "Kayıt formuna, kullanıcının zorunlu olarak işaretlemesi gereken onay kutucukları eklenmelidir. Bu kutucuklar işaretlenmeden <strong>\"Kayıt Ol\"</strong> butonu aktif olmamalıdır. Her onay metni, ilgili dokümana yönlendiren dinamik bir bağlantı içermelidir.",
+        "listItems": [
+          "Aydınlatma Metni'ni okudum ve kabul ediyorum.",
+          "Kütüphane Giriş-Çıkış-Mola ve Güvenlik Kuralları'nı okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/CweDp2j3P5pHw9D' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>",
+          "Genel Davranış Kuralları'nı okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/fDyg5PNStQfC79p' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>",
+          "Masa Bilgilendirme Kartı metnini okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/frNgT5BGZ4X3dD7' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>",
+          "Kitap Ödünç Alma ve İade İşlemleri kurallarını okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/baZPfPA3ZBCAaH5' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>"
+        ] 
+      }
+    },
+    { 
+      "id": 2, 
+      "title": "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası", 
+      "completed": false, 
+      "hasImage": true, 
+      "imageFile": "2.png",
+      "details": { 
+        "description": "Eğitim durumu bilgisi sisteme hatalı yansımaktadır.", 
+        "extraParagraph": "Veritabanı ile arayüz eşleşmesi sağlanmalıdır." 
+      }
+    },
+    { 
+      "id": 3, 
+      "title": "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)", 
+      "completed": false, 
+      "hasImage": false,
+      "details": { 
+        "description": "15 yaşından küçüklerin kaydı engellenmelidir.", 
+        "blockquote": "En az 15 yaşında olmalısınız." 
+      }
+    },
+    { 
+      "id": 4, 
+      "title": "Mola Yönetimi: Ardışık Mola Engelleme", 
+      "completed": false, 
+      "hasImage": false,
+      "details": { 
+        "description": "Mola bitişi ile yeni mola arasında süre kısıtlaması eklenmeli." 
+      }
+    },
+    { 
+      "id": 5, 
+      "title": "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği", 
+      "completed": false, 
+      "hasImage": true, 
+      "imageFile": "5.png",
+      "details": { 
+        "description": "Üye bilgileri düzenlenemiyor.", 
+        "blockquote": "Üyelik düzenleme özelliği eklenmedi." 
+      }
+    },
+    { 
+      "id": 6, 
+      "title": "Mobil Uygulama: Rezervasyon Hatası", 
+      "completed": false, 
+      "hasImage": true, 
+      "imageFile": "6.jpeg",
+      "details": { 
+        "description": "Uygun saatler bulunamadı hatası alınıyor.", 
+        "blockquote": "Uygun saatler bulunamadı." 
+      }
+    },
+    { 
+      "id": 7, 
+      "title": "İkinci Telefon Numarası Zorunluluğu", 
+      "completed": false, 
+      "hasImage": true, 
+      "imageFile": "7.jpeg",
+      "details": { 
+        "description": "Kayıt formuna ikinci telefon alanı eklenmeli.", 
+        "blockquote": "Lütfen ikinci telefon numaranızı giriniz." 
+      }
+    }
   ]
 };
 
@@ -328,17 +391,41 @@ function renderSections() {
     const titleSpan = document.createElement('div');
     titleSpan.className = 'section-title';
     titleSpan.innerHTML = `${item.id}. ${item.title}`;
-    if (item.completed) { titleSpan.classList.add('done'); titleSpan.innerHTML += '<span class="status-badge">✓ tamamlandı</span>'; }
-    else { titleSpan.innerHTML += '<span class="status-badge pending">bekliyor</span>'; }
+    if (item.completed) { 
+      titleSpan.classList.add('done'); 
+      titleSpan.innerHTML += '<span class="status-badge">✓ tamamlandı</span>'; 
+    } else { 
+      titleSpan.innerHTML += '<span class="status-badge pending">bekliyor</span>'; 
+    }
     header.appendChild(checkWrap);
     header.appendChild(titleSpan);
     const body = document.createElement('div');
     body.className = 'section-body';
     const d = item.details;
-    if (d.description) { const p = document.createElement('p'); p.innerHTML = d.description; body.appendChild(p); }
-    if (d.listItems) { const ul = document.createElement('ul'); d.listItems.forEach(li => { const l = document.createElement('li'); l.innerHTML = li; ul.appendChild(l); }); body.appendChild(ul); }
-    if (d.blockquote) { const bq = document.createElement('blockquote'); bq.innerHTML = d.blockquote; body.appendChild(bq); }
-    if (d.extraParagraph) { const ep = document.createElement('p'); ep.innerHTML = d.extraParagraph; body.appendChild(ep); }
+    if (d.description) { 
+      const p = document.createElement('p'); 
+      p.innerHTML = d.description; 
+      body.appendChild(p); 
+    }
+    if (d.listItems) { 
+      const ul = document.createElement('ul'); 
+      d.listItems.forEach(li => { 
+        const l = document.createElement('li'); 
+        l.innerHTML = li; 
+        ul.appendChild(l); 
+      }); 
+      body.appendChild(ul); 
+    }
+    if (d.blockquote) { 
+      const bq = document.createElement('blockquote'); 
+      bq.innerHTML = d.blockquote; 
+      body.appendChild(bq); 
+    }
+    if (d.extraParagraph) { 
+      const ep = document.createElement('p'); 
+      ep.innerHTML = d.extraParagraph; 
+      body.appendChild(ep); 
+    }
     if (item.hasImage && item.imageFile) {
       const btn = document.createElement('button');
       btn.className = 'image-btn';

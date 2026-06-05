@@ -41,7 +41,7 @@
     padding: 40px 20px;
   }
 
-  /* MacOS tarzı pencere - geniş akordiyon görünümü */
+  /* macOS tarzı pencere - geniş akordiyon */
   .window {
     width: 100%;
     max-width: 1400px;
@@ -73,38 +73,42 @@
     min-height: calc(100vh - 60px);
   }
 
-  .notice {
-    background: var(--blue-bg);
-    border: 0.5px solid rgba(0,113,227,0.2);
-    border-radius: 8px;
-    padding: 10px 14px;
-    margin-bottom: 24px;
-    font-size: 12px;
-    color: var(--blue-text);
-    line-height: 1.6;
-  }
-
-  .meta-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .meta-card {
+  /* progress bar sade, minimal */
+  .progress-wrap {
+    margin: 0 0 28px 0;
     background: var(--surface);
-    border-radius: var(--radius);
-    padding: 12px 14px;
+    border-radius: 28px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
   }
-
-  .meta-label { font-size: 11px; color: var(--text-tertiary); margin-bottom: 6px; letter-spacing: 0.3px; }
-  .meta-value { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-
-  .pri-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 11px; font-weight: 500;
-    padding: 3px 9px; border-radius: 20px;
-    background: var(--danger-bg); color: var(--danger-text);
+  .progress-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+    min-width: 140px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 20px;
+    width: 0%;
+    transition: width 0.2s;
+  }
+  .progress-stats {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
   }
 
   .items { display: flex; flex-direction: column; gap: 8px; }
@@ -223,43 +227,7 @@
   }
   .img-btn:hover { background: #005bbf; }
 
-  .progress-wrap {
-    margin: 18px 0 24px 0;
-    background: var(--surface);
-    border-radius: 28px;
-    padding: 8px 14px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .progress-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-secondary);
-  }
-  .progress-track {
-    flex: 1;
-    height: 6px;
-    background: #e2e8f0;
-    border-radius: 20px;
-    overflow: hidden;
-    min-width: 140px;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--blue);
-    border-radius: 20px;
-    width: 0%;
-    transition: width 0.2s;
-  }
-  .progress-stats {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-primary);
-    font-variant-numeric: tabular-nums;
-  }
-
+  /* modal görsel */
   .modal {
     display: none;
     position: fixed;
@@ -314,29 +282,9 @@
 
   @media (max-width: 820px) {
     .window { min-width: auto; max-width: 96vw; }
-    .meta-grid { grid-template-columns: repeat(2, 1fr); }
-    .item-title { font-size: 12px; }
     body { padding: 20px 12px; }
+    .item-title { font-size: 12px; }
     .item-detail-inner { padding-left: 24px; }
-  }
-
-  .cb-sim {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    background: white;
-    border: 1.5px solid var(--border-med);
-    border-radius: 4px;
-    margin-right: 6px;
-    font-size: 12px;
-    color: var(--blue);
-    flex-shrink: 0;
-  }
-  .completed-text {
-    text-decoration: line-through;
-    color: var(--text-tertiary);
   }
 </style>
 </head>
@@ -348,14 +296,7 @@
   </div>
 
   <div class="body">
-    <div class="notice">
-      📌 Bu doküman, canlı ortam testleri sırasında tespit edilen kritik eksikliklerin listesidir.
-      <strong>🖼️ 2, 5, 6, 7. maddeler görsel içerir</strong> (mavi butondan göster).
-    </div>
-
-    <div class="meta-grid" id="metaGrid"></div>
-
-    <!-- İlerleme çubuğu (MAC uyumlu) -->
+    <!-- İlerleme çubuğu - sade ve temiz -->
     <div class="progress-wrap">
       <span class="progress-label">✅ Tamamlanma durumu</span>
       <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
@@ -366,7 +307,7 @@
   </div>
 </div>
 
-<!-- Modal for images -->
+<!-- Görsel modal -->
 <div id="imageModal" class="modal" onclick="closeModal()">
   <div class="modal-content" onclick="event.stopPropagation()">
     <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -376,7 +317,7 @@
 </div>
 
 <script>
-  // ---------- REVİZYON DATASI (orijinal + ek alanlar) ----------
+  // ---------- REVİZYON DATASI (tüm maddeler) ----------
   const revisionItems = [
     { 
       id: 1,
@@ -462,8 +403,6 @@
     }
   ];
 
-  // Referanslar
-  const metaGrid = document.getElementById('metaGrid');
   const itemsContainer = document.getElementById('itemsContainer');
   const progFill = document.getElementById('progFill');
   const progStats = document.getElementById('progStats');
@@ -486,7 +425,7 @@
   }
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-  // Akordiyon toggle (sadece bir tane açılır - klasik macOS listesi)
+  // Akordiyon toggle (sadece tek açılır)
   function toggleItem(headerElem) {
     const detail = headerElem.nextElementSibling;
     const chevron = headerElem.querySelector('.chevron');
@@ -508,7 +447,7 @@
     }
   }
 
-  // İlerleme ve meta bilgilerini güncelle
+  // İlerleme çubuğunu güncelle
   function updateProgress() {
     const total = revisionItems.length;
     const completedCount = revisionItems.filter(i => i.completed === true).length;
@@ -517,29 +456,17 @@
     progStats.innerText = `${completedCount} / ${total}`;
   }
 
-  // Meta kartlarını doldur (ilk kez)
-  function renderMeta() {
-    const total = revisionItems.length;
-    const pendingCount = revisionItems.filter(i => !i.completed).length;
-    metaGrid.innerHTML = `
-      <div class="meta-card"><div class="meta-label">Doküman Türü</div><div class="meta-value">Revizyon ve Eksik Listesi</div></div>
-      <div class="meta-card"><div class="meta-label">Kapsam</div><div class="meta-value">Web sitesi, yönetim paneli ve mobil uygulama</div></div>
-      <div class="meta-card"><div class="meta-label">Toplam Madde</div><div class="meta-value">${total}</div></div>
-      <div class="meta-card"><div class="meta-label">Öncelik</div><div class="meta-value"><span class="pri-badge"><i class="ti ti-alert-triangle" style="font-size:11px"></i> Yüksek</span></div></div>
-    `;
-  }
-
-  // Tüm akordiyon liste öğelerini oluştur (mac tema)
+  // Tüm liste öğelerini oluştur (meta kartları ve notice tamamen kaldırıldı)
   function renderItems() {
     itemsContainer.innerHTML = '';
-    revisionItems.forEach((item, idx) => {
+    revisionItems.forEach((item) => {
       const itemDiv = document.createElement('div');
       itemDiv.className = 'item';
 
-      // header
+      // HEADER
       const headerDiv = document.createElement('div');
       headerDiv.className = 'item-header';
-      // header sol
+
       const leftDiv = document.createElement('div');
       leftDiv.className = 'header-left';
       const numSpan = document.createElement('span');
@@ -555,7 +482,6 @@
       leftDiv.appendChild(numSpan);
       leftDiv.appendChild(titleSpan);
 
-      // tag durumu
       const tagSpan = document.createElement('span');
       tagSpan.className = 'tag';
       if (item.completed) {
@@ -572,13 +498,12 @@
       headerDiv.appendChild(tagSpan);
       headerDiv.appendChild(chevronIcon);
 
-      // detay alanı
+      // DETAY ALANI
       const detailDiv = document.createElement('div');
       detailDiv.className = 'item-detail';
       const innerDiv = document.createElement('div');
       innerDiv.className = 'item-detail-inner';
 
-      // açıklama metni
       if (item.details.description) {
         const descP = document.createElement('div');
         descP.className = 'item-desc';
@@ -586,7 +511,6 @@
         innerDiv.appendChild(descP);
       }
 
-      // liste varsa bullet-list
       if (item.details.listItems && item.details.listItems.length > 0) {
         const ul = document.createElement('ul');
         ul.className = 'bullet-list';
@@ -598,7 +522,6 @@
         innerDiv.appendChild(ul);
       }
 
-      // blockquote varsa
       if (item.details.blockquote) {
         const bq = document.createElement('blockquote');
         bq.style.marginTop = '10px';
@@ -610,7 +533,6 @@
         innerDiv.appendChild(bq);
       }
 
-      // extra paragraf
       if (item.details.extraParagraph) {
         const extraP = document.createElement('p');
         extraP.style.marginTop = '8px';
@@ -620,7 +542,7 @@
         innerDiv.appendChild(extraP);
       }
 
-      // görsel butonu
+      // Görsel butonu (sadece hasImage true olanlarda)
       if (item.hasImage && item.imageFile) {
         const imgBtn = document.createElement('button');
         imgBtn.className = 'img-btn';
@@ -638,9 +560,8 @@
       itemDiv.appendChild(headerDiv);
       itemDiv.appendChild(detailDiv);
 
-      // header tıklama olayını bağla (akordiyon)
+      // header tıklama (akordiyon)
       headerDiv.addEventListener('click', (e) => {
-        // butona tıklanırsa event yayılmasın ama buton kendi modalını açıyor, yine de sorun yok
         if (e.target.closest('.img-btn')) return;
         toggleItem(headerDiv);
       });
@@ -649,9 +570,8 @@
     });
   }
 
-  // Tüm componentleri render et
+  // Başlatma (kaldırılan meta ve notice yok)
   function init() {
-    renderMeta();
     renderItems();
     updateProgress();
   }

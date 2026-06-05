@@ -258,9 +258,7 @@
 
   <div id="sections-container"></div>
 
-  <div class="footer">
-    Görsel dosyaları: <strong>2.png , 5.png , 6.jpeg , 7.jpeg</strong> (aynı klasörde olmalı)
-  </div>
+
 </div>
 
 <div id="imageModal" class="modal" onclick="closeModal()">
@@ -344,7 +342,7 @@ function renderSections() {
     if (item.hasImage && item.imageFile) {
       const btn = document.createElement('button');
       btn.className = 'image-btn';
-      btn.innerHTML = '🖼️ Görseli Göster (' + item.imageFile + ')';
+      btn.innerHTML = '🖼️ Görseli Göster';
       btn.onclick = (function(f, t) { return function() { showImageModal(f, t); }; })(item.imageFile, item.title);
       body.appendChild(btn);
     }

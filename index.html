@@ -3,442 +3,927 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Revizyon ve Eksik Listesi</title>
+<title>Revizyon Takip Raporu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface-subtle: #f1f5f9;
+    --border: #e2e8f0;
+    --border-subtle: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --accent-mid: #bfdbfe;
+    --open-color: #d97706;
+    --open-bg: #fffbeb;
+    --open-border: #fde68a;
+    --progress-color: #2563eb;
+    --progress-bg: #eff6ff;
+    --progress-border: #bfdbfe;
+    --done-color: #059669;
+    --done-bg: #ecfdf5;
+    --done-border: #a7f3d0;
+    --shadow-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+    --shadow-md: 0 4px 16px rgba(15,23,42,.08), 0 1px 4px rgba(15,23,42,.04);
+    --shadow-lg: 0 12px 32px rgba(15,23,42,.10), 0 4px 8px rgba(15,23,42,.04);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --radius-xs: 6px;
+    --font: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    background: #f5f5f7;
-    color: #1e293b;
-    padding: 2rem 1rem;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
-  .container { max-width: 860px; margin: 0 auto; }
-  h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a; }
-  .info-box {
-    background: #eef2ff;
-    border-left: 4px solid #3b82f6;
-    border-radius: 10px;
-    padding: .85rem 1.2rem;
-    font-size: 14px;
-    color: #1e40af;
-    margin-bottom: 1.5rem;
+
+  /* ── Header ── */
+  .page-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255,255,255,.92);
   }
-  .meta-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-    margin-bottom: 1.8rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    overflow: hidden;
-    background: #fff;
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
   }
-  .meta-table td {
-    padding: .65rem .9rem;
-    border-bottom: 1px solid #f1f5f9;
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-  .meta-table td:first-child { color: #475569; width: 140px; font-weight: 600; }
-  .badge-high {
-    display: inline-block;
-    background: #fee2e2;
-    color: #b91c1c;
-    font-size: 11px;
-    padding: 2px 12px;
-    border-radius: 30px;
-    font-weight: 700;
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: var(--radius-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
-  .progress-bar-wrap { margin-bottom: 1.8rem; background: #fff; padding: 0.75rem 1rem; border-radius: 20px; border: 1px solid #edf2f7; }
-  .progress-label {
+  .brand-icon svg { color: white; }
+  .brand-label {
     font-size: 13px;
-    color: #334155;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -.01em;
+  }
+  .brand-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-date {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-family: var(--mono);
+  }
+  .header-badge {
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--accent-mid);
+    letter-spacing: .01em;
+  }
+
+  /* ── Main Layout ── */
+  .page-main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  /* ── Hero ── */
+  .page-hero {
+    margin-bottom: 2.5rem;
+    animation: fadeUp .45s ease both;
+  }
+  .page-hero-eyebrow {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .6rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .page-hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .page-hero h1 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -.03em;
+    line-height: 1.15;
     margin-bottom: .5rem;
+  }
+  .page-hero-sub {
+    font-size: 15px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 520px;
+  }
+
+  /* ── Dashboard Cards ── */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    animation: fadeUp .5s ease .1s both;
+  }
+  .dash-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow .2s, transform .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .dash-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+  }
+  .dash-card.total::before { background: #94a3b8; }
+  .dash-card.done::before { background: var(--done-color); }
+  .dash-card.pending::before { background: var(--open-color); }
+  .dash-card.rate::before { background: var(--accent); }
+  .dash-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .dash-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+  .dash-value {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -.04em;
+    line-height: 1;
+    color: var(--text-primary);
+    margin-bottom: .25rem;
+  }
+  .dash-card.done .dash-value { color: var(--done-color); }
+  .dash-card.pending .dash-value { color: var(--open-color); }
+  .dash-card.rate .dash-value { color: var(--accent); }
+  .dash-caption {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── Progress ── */
+  .progress-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-sm);
+    animation: fadeUp .5s ease .18s both;
+  }
+  .progress-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: .9rem;
+  }
+  .progress-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .progress-pct {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--mono);
   }
   .progress-track {
-    height: 10px;
-    background: #e2e8f0;
-    border-radius: 20px;
+    height: 6px;
+    background: var(--surface-subtle);
+    border-radius: 100px;
     overflow: hidden;
   }
   .progress-fill {
     height: 100%;
-    background: #3b82f6;
-    border-radius: 20px;
-    transition: width 0.35s;
+    background: linear-gradient(90deg, #2563eb, #3b82f6);
+    border-radius: 100px;
+    transition: width .6s cubic-bezier(.4,0,.2,1);
   }
-  .section {
-    border: 1px solid #e2edf2;
-    border-radius: 18px;
+
+  /* ── Section Header ── */
+  .items-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 1.1rem;
-    background: #fff;
-    overflow: hidden;
+    animation: fadeUp .5s ease .22s both;
   }
-  .section-header {
+  .items-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+  .items-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    background: var(--surface-subtle);
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── Revision Cards ── */
+  .revision-list {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+
+  .rev-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    animation: fadeUp .5s ease both;
+    transition: box-shadow .2s;
+  }
+  .rev-card:hover { box-shadow: var(--shadow-md); }
+
+  .rev-card-inner {
+    display: flex;
+  }
+
+  /* Status line */
+  .rev-status-bar {
+    width: 4px;
+    flex-shrink: 0;
+    border-radius: 0;
+    transition: background .3s;
+  }
+  .rev-card[data-status="open"] .rev-status-bar { background: var(--open-color); }
+  .rev-card[data-status="progress"] .rev-status-bar { background: var(--accent); }
+  .rev-card[data-status="done"] .rev-status-bar { background: var(--done-color); }
+
+  /* Accordion trigger */
+  .rev-summary {
+    flex: 1;
+    padding: 1.1rem 1.3rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 0;
+    list-style: none;
+    -webkit-appearance: none;
+  }
+  .rev-summary::-webkit-details-marker { display: none; }
+
+  .rev-num {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    background: var(--surface-subtle);
+    padding: 3px 8px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    letter-spacing: .03em;
+  }
+
+  .rev-main {
+    flex: 1;
+    min-width: 0;
+  }
+  .rev-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -.01em;
+    line-height: 1.35;
+  }
+  .rev-card[data-status="done"] .rev-title {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+
+  .rev-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 100px;
+    letter-spacing: .01em;
+  }
+  .status-pill::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-pill.open {
+    background: var(--open-bg);
+    color: var(--open-color);
+    border: 1px solid var(--open-border);
+  }
+  .status-pill.open::before { background: var(--open-color); }
+  .status-pill.progress {
+    background: var(--progress-bg);
+    color: var(--progress-color);
+    border: 1px solid var(--progress-border);
+  }
+  .status-pill.progress::before { background: var(--progress-color); animation: pulse 1.8s infinite; }
+  .status-pill.done {
+    background: var(--done-bg);
+    color: var(--done-color);
+    border: 1px solid var(--done-border);
+  }
+  .status-pill.done::before { background: var(--done-color); }
+  .has-image-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10.5px;
+    color: var(--text-muted);
+    background: var(--surface-subtle);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+
+  .rev-chevron {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: transform .25s cubic-bezier(.4,0,.2,1);
+  }
+  details[open] .rev-chevron { transform: rotate(180deg); }
+
+  /* Detail body */
+  .rev-body {
+    padding: 0 1.3rem 1.3rem 1.3rem;
+    margin-left: 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .rev-description {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    padding-top: .9rem;
+  }
+  .rev-description strong { color: var(--text-primary); font-weight: 600; }
+  .rev-list {
+    margin: .75rem 0 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  .rev-list li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
     display: flex;
     align-items: flex-start;
-    gap: 14px;
-    padding: 1rem 1.3rem;
+    gap: 8px;
+    padding: .6rem .9rem;
+    background: var(--surface-subtle);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
   }
-  .check-wrap {
+  .rev-list li::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text-muted);
     flex-shrink: 0;
-    margin-top: 2px;
-    pointer-events: none;
+    margin-top: 6px;
   }
-  input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: default;
-    pointer-events: none;
-    accent-color: #3b82f6;
-  }
-  .section-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #0f172a;
-    line-height: 1.4;
-    flex: 1;
-  }
-  .section-title.done {
-    text-decoration: line-through;
-    color: #94a3b8;
-  }
-  .status-badge {
-    display: inline-block;
-    margin-left: 12px;
-    font-size: 11px;
-    font-weight: 500;
-    background: #e6f7e6;
-    color: #2e7d32;
-    padding: 2px 10px;
-    border-radius: 30px;
-  }
-  .status-badge.pending { background: #fff0e6; color: #b45309; }
-  .section-body {
-    padding: 0 1.3rem 1.1rem 1.3rem;
-    font-size: 14px;
-    color: #334155;
-    line-height: 1.65;
-    border-top: 1px solid #f0f4f9;
-  }
-  .section-body p { margin-top: .6rem; }
-  .section-body blockquote {
-    border-left: 3px solid #cbd5e1;
-    padding-left: .85rem;
-    margin: .65rem 0;
-    color: #475569;
-    background: #fafcff;
-  }
-  .section-body ul { margin: .4rem 0 .4rem 1.4rem; }
-  .section-body li { margin-bottom: .3rem; word-break: break-word; }
-  .section-body li a {
-    color: #2563eb;
+  .rev-list li a {
+    color: var(--accent);
     text-decoration: none;
-    border-bottom: 1px dashed #94a3b8;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: border-color .15s;
   }
-  .section-body li a:hover { color: #1e40af; border-bottom-color: #3b82f6; }
-  .footer {
-    margin-top: 2rem;
-    padding-top: 1.2rem;
-    border-top: 1px solid #e2edf2;
+  .rev-list li a:hover { border-bottom-color: var(--accent); }
+  .rev-blockquote {
+    margin-top: .75rem;
+    padding: .7rem 1rem;
+    border-left: 3px solid var(--border);
+    background: var(--surface-subtle);
+    border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
     font-size: 13px;
-    color: #64748b;
-    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
   }
-  .note-readonly {
-    background: #f8fafc;
-    font-size: 12px;
-    padding: 4px 12px;
-    border-radius: 100px;
-    display: inline-block;
-  }
-  .image-btn {
+  .rev-image-link {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: #3b82f6;
-    border: none;
-    border-radius: 30px;
-    padding: 8px 18px;
-    font-size: 13px;
+    margin-top: .9rem;
+    font-size: 12.5px;
     font-weight: 600;
-    color: white;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--accent-mid);
+    background: var(--accent-light);
+    padding: 6px 14px;
+    border-radius: 100px;
+    transition: all .18s;
     cursor: pointer;
-    margin-top: 12px;
-    transition: all 0.2s;
   }
-  .image-btn:hover { background: #2563eb; }
-  .modal {
+  .rev-image-link:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(37,99,235,.2);
+  }
+  .rev-image-link svg { transition: inherit; }
+
+  /* ── Modal ── */
+  .modal-overlay {
     display: none;
     position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.85);
+    inset: 0;
+    z-index: 999;
+    background: rgba(15,23,42,.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     justify-content: center;
     align-items: center;
+    padding: 1.5rem;
     cursor: pointer;
+    animation: fadeIn .2s ease;
   }
-  .modal-content {
-    max-width: 90%;
-    max-height: 90%;
-    background: transparent;
-    position: relative;
+  .modal-overlay.active { display: flex; }
+  .modal-box {
+    background: var(--surface);
+    border-radius: 18px;
+    max-width: 780px;
+    width: 100%;
+    max-height: 88vh;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,.08);
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    animation: scaleIn .25s cubic-bezier(.34,1.56,.64,1);
   }
-  .modal-content img {
-    max-width: 100%;
-    max-height: 85vh;
-    border-radius: 12px;
-    box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+  .modal-header {
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
   }
-  .close-modal {
-    position: absolute;
-    top: -40px;
-    right: 0;
-    color: white;
-    font-size: 32px;
-    cursor: pointer;
-    background: rgba(0,0,0,0.5);
-    width: 40px;
-    height: 40px;
+  .modal-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -.01em;
+  }
+  .modal-close {
+    width: 30px;
+    height: 30px;
+    background: var(--surface-subtle);
+    border: 1px solid var(--border);
     border-radius: 50%;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--text-secondary);
+    transition: all .15s;
+    flex-shrink: 0;
   }
-  .modal-caption {
-    text-align: center;
-    color: white;
-    margin-top: 12px;
-    font-size: 14px;
-    background: rgba(0,0,0,0.6);
-    padding: 6px 16px;
-    border-radius: 30px;
-    display: inline-block;
+  .modal-close:hover { background: var(--border); color: var(--text-primary); }
+  .modal-body {
+    padding: 1.25rem;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-subtle);
   }
-  .caption-wrapper { text-align: center; }
-  @media (max-width: 640px) {
-    .section-header { padding: 0.85rem 1rem; }
-    .section-body { padding: 0 1rem 1rem 1rem; }
-    .section-title { font-size: 13.5px; }
+  .modal-body img {
+    max-width: 100%;
+    max-height: calc(88vh - 100px);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    display: block;
+  }
+
+  /* ── Footer ── */
+  .page-footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .5rem;
+    animation: fadeUp .5s ease .3s both;
+  }
+  .footer-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .readonly-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--surface-subtle);
+    border: 1px solid var(--border);
+    padding: 2px 10px;
+    border-radius: 100px;
+    letter-spacing: .02em;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .4; }
+  }
+
+  /* Staggered cards */
+  .rev-card:nth-child(1) { animation-delay: .25s; }
+  .rev-card:nth-child(2) { animation-delay: .3s; }
+  .rev-card:nth-child(3) { animation-delay: .35s; }
+  .rev-card:nth-child(4) { animation-delay: .4s; }
+  .rev-card:nth-child(5) { animation-delay: .45s; }
+  .rev-card:nth-child(6) { animation-delay: .5s; }
+  .rev-card:nth-child(7) { animation-delay: .55s; }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .page-main { padding: 1.5rem 1rem 3rem; }
+    .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+    .page-header { padding: 0 1rem; }
+    .brand-sub { display: none; }
+    .header-date { display: none; }
+  }
+  @media (max-width: 400px) {
+    .dashboard-grid { grid-template-columns: 1fr 1fr; gap: .6rem; }
+    .dash-value { font-size: 1.6rem; }
   }
 </style>
 </head>
 <body>
-<div class="container">
-  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
-    <h1>📋 Revizyon ve Eksik Listesi</h1>
-    <div class="note-readonly">⛔ Yalnızca izleme modu</div>
+
+<!-- ── Sticky Header ── -->
+<header class="page-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-label">Revizyon Takip Sistemi</div>
+        <div class="brand-sub">Canlı İzleme Raporu</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <span class="header-date" id="header-date">—</span>
+      <span class="header-badge">Salt Okunur</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── Main Content ── -->
+<main class="page-main">
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="page-hero-eyebrow">Revizyon &amp; Eksik Analizi</div>
+    <h1>Canlı Ortam Test Raporu</h1>
+    <p class="page-hero-sub">Canlı ortam testleri sürecinde tespit edilen kritik eksiklikler ve revizyon maddeleri. Web sitesi, yönetim paneli ve mobil uygulama kapsamında.</p>
   </div>
 
-  <div class="info-box">
-    📌 Bu doküman, canlı ortam testleri sırasında tespit edilen kritik eksikliklerin listesidir.<br>
-    🖼️ <strong>2, 5, 6, 7. maddelerin görselleri vardır.</strong> Mavi butona tıklayın.
+  <!-- Dashboard Grid -->
+  <div class="dashboard-grid">
+    <div class="dash-card total">
+      <div class="dash-label">Toplam</div>
+      <div class="dash-value" id="stat-total">—</div>
+      <div class="dash-caption">revizyon maddesi</div>
+    </div>
+    <div class="dash-card done">
+      <div class="dash-label">Tamamlanan</div>
+      <div class="dash-value" id="stat-done">—</div>
+      <div class="dash-caption">madde tamamlandı</div>
+    </div>
+    <div class="dash-card pending">
+      <div class="dash-label">Bekleyen</div>
+      <div class="dash-value" id="stat-pending">—</div>
+      <div class="dash-caption">madde açık</div>
+    </div>
+    <div class="dash-card rate">
+      <div class="dash-label">Tamamlanma</div>
+      <div class="dash-value" id="stat-rate">—</div>
+      <div class="dash-caption">tamamlanma oranı</div>
+    </div>
   </div>
 
-  <table class="meta-table">
-    <tr><td>Doküman Türü</td><td>Revizyon ve Eksik Listesi</td></tr>
-    <tr><td>Kapsam</td><td>Web sitesi, yönetim paneli ve mobil uygulama</td></tr>
-    <tr><td>Toplam Madde</td><td id="total-items">-</td></tr>
-    <tr><td>Öncelik</td><td><span class="badge-high">Yüksek</span></td></tr>
-  </table>
-
-  <div class="progress-bar-wrap">
-    <div class="progress-label">
-      <span>✅ Tamamlanan maddeler</span>
-      <span id="prog-text">0 / 0</span>
+  <!-- Progress -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <span class="progress-title">Genel İlerleme Durumu</span>
+      <span class="progress-pct" id="prog-pct">%0</span>
     </div>
     <div class="progress-track">
       <div class="progress-fill" id="prog-fill" style="width:0%"></div>
     </div>
   </div>
 
-  <div id="sections-container"></div>
+  <!-- Items Header -->
+  <div class="items-header">
+    <span class="items-title">Revizyon Maddeleri</span>
+    <span class="items-count" id="items-count">0 madde</span>
+  </div>
 
-</div>
+  <!-- Revision Cards -->
+  <div class="revision-list" id="revision-list"></div>
 
-<div id="imageModal" class="modal" onclick="closeModal()">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <span class="close-modal" onclick="closeModal()">&times;</span>
-    <img id="modalImage" src="" alt="Madde görseli">
-    <div class="caption-wrapper"><div class="modal-caption" id="modalCaption"></div></div>
+  <!-- Footer -->
+  <footer class="page-footer">
+    <div class="footer-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Bu rapor yalnızca izleme ve bilgilendirme amacıyla sunulmaktadır.
+    </div>
+    <span class="readonly-tag">İzleme Modu</span>
+  </footer>
+
+</main>
+
+<!-- ── Modal ── -->
+<div class="modal-overlay" id="modal" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Görsel Kanıt</span>
+      <button class="modal-close" onclick="closeModal()" aria-label="Kapat">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <img id="modal-img" src="" alt="Görsel">
+    </div>
   </div>
 </div>
 
 <script>
+// ── Data ──
 const revisionData = {
-  "items": [
-    { 
-      "id": 1, 
-      "title": "Kayıt Ekranı: Mevzuat ve Şart Onayları", 
-      "completed": false, 
-      "hasImage": false,
-      "details": { 
-        "description": "Kayıt formuna, kullanıcının zorunlu olarak işaretlemesi gereken onay kutucukları eklenmelidir. Bu kutucuklar işaretlenmeden <strong>\"Kayıt Ol\"</strong> butonu aktif olmamalıdır. Her onay metni, ilgili dokümana yönlendiren dinamik bir bağlantı içermelidir.",
-        "listItems": [
-          "Aydınlatma Metni'ni okudum ve kabul ediyorum.",
-          "Kütüphane Giriş-Çıkış-Mola ve Güvenlik Kuralları'nı okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/CweDp2j3P5pHw9D' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>",
-          "Genel Davranış Kuralları'nı okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/fDyg5PNStQfC79p' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>",
-          "Masa Bilgilendirme Kartı metnini okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/frNgT5BGZ4X3dD7' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>",
-          "Kitap Ödünç Alma ve İade İşlemleri kurallarını okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/baZPfPA3ZBCAaH5' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>"
-        ] 
-      }
+  project: "Web, Panel & Mobil",
+  items: [
+    {
+      id: 1,
+      title: "Kayıt Ekranı: Mevzuat ve Şart Onayları",
+      status: "open",
+      hasImage: false,
+      description: "Kayıt formuna, kullanıcının zorunlu olarak işaretlemesi gereken onay mekanizmaları eklenmelidir. Bu onaylar tamamlanmadan <strong>\"Kayıt Ol\"</strong> işlemi gerçekleştirilememeli, her metin ilgili dokümana yönlendiren bağlantı içermelidir.",
+      listItems: [
+        "Aydınlatma Metni'ni okudum ve kabul ediyorum.",
+        "Kütüphane Giriş-Çıkış-Mola ve Güvenlik Kuralları'nı okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/CweDp2j3P5pHw9D' target='_blank' rel='noopener noreferrer'>Dokümanı İncele ↗</a>",
+        "Genel Davranış Kuralları'nı okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/fDyg5PNStQfC79p' target='_blank' rel='noopener noreferrer'>Dokümanı İncele ↗</a>",
+        "Masa Bilgilendirme Kartı metnini okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/frNgT5BGZ4X3dD7' target='_blank' rel='noopener noreferrer'>Dokümanı İncele ↗</a>",
+        "Kitap Ödünç Alma ve İade İşlemleri kurallarını okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/baZPfPA3ZBCAaH5' target='_blank' rel='noopener noreferrer'>Dokümanı İncele ↗</a>"
+      ]
     },
-    { 
-      "id": 2, 
-      "title": "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası", 
-      "completed": false, 
-      "hasImage": true, 
-      "imageFile": "2.png",
-      "details": { 
-        "description": "Eğitim durumu bilgisi sisteme hatalı yansımaktadır.", 
-        "extraParagraph": "Veritabanı ile arayüz eşleşmesi sağlanmalıdır." 
-      }
+    {
+      id: 2,
+      title: "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası",
+      status: "open",
+      hasImage: true,
+      imageFile: "2.png",
+      description: "Eğitim durumu bilgisi sisteme hatalı yansımaktadır. Veritabanı ile arayüz eşleşmesi sağlanmalı, doğru veri çekme mekanizması kurgulanmalıdır.",
     },
-    { 
-      "id": 3, 
-      "title": "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)", 
-      "completed": false, 
-      "hasImage": false,
-      "details": { 
-        "description": "15 yaşından küçüklerin kaydı engellenmelidir.", 
-        "blockquote": "En az 15 yaşında olmalısınız." 
-      }
+    {
+      id: 3,
+      title: "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)",
+      status: "open",
+      hasImage: false,
+      description: "15 yaşından küçük kullanıcıların sisteme kaydı engellenmelidir. Yaş doğrulama kontrolü kayıt akışına entegre edilmeli ve aşağıdaki hata bildirimi gösterilmelidir.",
+      blockquote: "En az 15 yaşında olmalısınız."
     },
-    { 
-      "id": 4, 
-      "title": "Mola Yönetimi: Ardışık Mola Engelleme", 
-      "completed": false, 
-      "hasImage": false,
-      "details": { 
-        "description": "Mola bitişi ile yeni mola arasında süre kısıtlaması eklenmeli." 
-      }
+    {
+      id: 4,
+      title: "Mola Yönetimi: Ardışık Mola Engelleme",
+      status: "open",
+      hasImage: false,
+      description: "Mola bitişi ile yeni mola talebi arasında zorunlu bir bekleme süresi tanımlanmalıdır. Ardışık mola kullanımının önüne geçmek için sistem tarafı kısıtlama eklenmeli."
     },
-    { 
-      "id": 5, 
-      "title": "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği", 
-      "completed": false, 
-      "hasImage": true, 
-      "imageFile": "5.png",
-      "details": { 
-        "description": "Üye bilgileri düzenlenemiyor.", 
-        "blockquote": "Üyelik düzenleme özelliği eklenmedi." 
-      }
+    {
+      id: 5,
+      title: "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği",
+      status: "open",
+      hasImage: true,
+      imageFile: "5.png",
+      description: "Yönetim panelinde kayıtlı üye bilgilerinin düzenlenmesi mümkün değildir. Üyelik bilgilerini güncellemek için düzenleme arayüzü ve yetkilendirme sistemi oluşturulmalıdır.",
+      blockquote: "Üyelik düzenleme özelliği eklenmedi."
     },
-    { 
-      "id": 6, 
-      "title": "Mobil Uygulama: Rezervasyon Hatası", 
-      "completed": false, 
-      "hasImage": true, 
-      "imageFile": "6.jpeg",
-      "details": { 
-        "description": "Uygun saatler bulunamadı hatası alınıyor.", 
-        "blockquote": "Uygun saatler bulunamadı." 
-      }
+    {
+      id: 6,
+      title: "Mobil Uygulama: Rezervasyon Hatası",
+      status: "open",
+      hasImage: true,
+      imageFile: "6.jpeg",
+      description: "Mobil uygulama üzerinden masa rezervasyonu yapılmaya çalışıldığında hata alınmaktadır. Uygun saatlerin sorgulanması ve listelenmesi sistematik biçimde incelenmelidir.",
+      blockquote: "Uygun saatler bulunamadı."
     },
-    { 
-      "id": 7, 
-      "title": "İkinci Telefon Numarası Zorunluluğu", 
-      "completed": false, 
-      "hasImage": true, 
-      "imageFile": "7.jpeg",
-      "details": { 
-        "description": "Kayıt formuna ikinci telefon alanı eklenmeli.", 
-        "blockquote": "Lütfen ikinci telefon numaranızı giriniz." 
-      }
+    {
+      id: 7,
+      title: "İkinci Telefon Numarası Zorunluluğu",
+      status: "open",
+      hasImage: true,
+      imageFile: "7.jpeg",
+      description: "Kayıt formuna opsiyonel ya da zorunlu ikinci telefon numarası alanı eklenmelidir. Bu alan, acil iletişim ve üye doğrulama süreçleri için kullanılacaktır.",
+      blockquote: "Lütfen ikinci telefon numaranızı giriniz."
     }
   ]
 };
 
-function showImageModal(src, title) {
-  const modal = document.getElementById('imageModal');
-  const modalImg = document.getElementById('modalImage');
-  const modalCaption = document.getElementById('modalCaption');
-  modalImg.src = src;
-  modalCaption.textContent = title;
-  modal.style.display = 'flex';
-  modalImg.onerror = function() {
-    modalImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect width="300" height="200" fill="%23fee2e2"/%3E%3Ctext x="150" y="110" text-anchor="middle" fill="%23b91c1c"%3EGörsel bulunamadı: ' + src + '%3C/text%3E%3C/svg%3E';
-    modalCaption.textContent = title + ' - Görsel dosyası eksik: ' + src;
-  };
-}
-function closeModal() { document.getElementById('imageModal').style.display = 'none'; }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+// ── Status helpers ──
+const statusLabel = { open: "Açık", progress: "Devam Ediyor", done: "Tamamlandı" };
+const statusClass = { open: "open", progress: "progress", done: "done" };
 
-function renderSections() {
-  const container = document.getElementById('sections-container');
+// ── Render ──
+function render() {
   const items = revisionData.items;
   const total = items.length;
-  document.getElementById('total-items').innerText = total;
-  const completedCount = items.filter(i => i.completed).length;
-  document.getElementById('prog-text').innerText = `${completedCount} / ${total}`;
-  document.getElementById('prog-fill').style.width = (completedCount/total*100)+'%';
-  container.innerHTML = '';
+  const done = items.filter(i => i.status === "done").length;
+  const pending = items.filter(i => i.status !== "done").length;
+  const rate = total ? Math.round(done / total * 100) : 0;
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-rate').textContent = `%${rate}`;
+  document.getElementById('prog-pct').textContent = `%${rate}`;
+  document.getElementById('items-count').textContent = `${total} madde`;
+  setTimeout(() => {
+    document.getElementById('prog-fill').style.width = rate + '%';
+  }, 100);
+
+  // Header date
+  const now = new Date();
+  document.getElementById('header-date').textContent = now.toLocaleDateString('tr-TR', {
+    day: '2-digit', month: 'long', year: 'numeric'
+  });
+
+  const list = document.getElementById('revision-list');
+  list.innerHTML = '';
+
   items.forEach(item => {
-    const section = document.createElement('div');
-    section.className = 'section';
-    const header = document.createElement('div');
-    header.className = 'section-header';
-    const checkWrap = document.createElement('div');
-    checkWrap.className = 'check-wrap';
-    const cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.checked = item.completed;
-    cb.disabled = true;
-    checkWrap.appendChild(cb);
-    const titleSpan = document.createElement('div');
-    titleSpan.className = 'section-title';
-    titleSpan.innerHTML = `${item.id}. ${item.title}`;
-    if (item.completed) { 
-      titleSpan.classList.add('done'); 
-      titleSpan.innerHTML += '<span class="status-badge">✓ tamamlandı</span>'; 
-    } else { 
-      titleSpan.innerHTML += '<span class="status-badge pending">bekliyor</span>'; 
+    const card = document.createElement('div');
+    card.className = 'rev-card';
+    card.dataset.status = item.status;
+
+    // Build detail body HTML
+    let bodyHtml = '';
+    if (item.description) {
+      bodyHtml += `<p class="rev-description">${item.description}</p>`;
     }
-    header.appendChild(checkWrap);
-    header.appendChild(titleSpan);
-    const body = document.createElement('div');
-    body.className = 'section-body';
-    const d = item.details;
-    if (d.description) { 
-      const p = document.createElement('p'); 
-      p.innerHTML = d.description; 
-      body.appendChild(p); 
+    if (item.listItems && item.listItems.length) {
+      bodyHtml += '<ul class="rev-list">' + item.listItems.map(li => `<li>${li}</li>`).join('') + '</ul>';
     }
-    if (d.listItems) { 
-      const ul = document.createElement('ul'); 
-      d.listItems.forEach(li => { 
-        const l = document.createElement('li'); 
-        l.innerHTML = li; 
-        ul.appendChild(l); 
-      }); 
-      body.appendChild(ul); 
-    }
-    if (d.blockquote) { 
-      const bq = document.createElement('blockquote'); 
-      bq.innerHTML = d.blockquote; 
-      body.appendChild(bq); 
-    }
-    if (d.extraParagraph) { 
-      const ep = document.createElement('p'); 
-      ep.innerHTML = d.extraParagraph; 
-      body.appendChild(ep); 
+    if (item.blockquote) {
+      bodyHtml += `<div class="rev-blockquote">${item.blockquote}</div>`;
     }
     if (item.hasImage && item.imageFile) {
-      const btn = document.createElement('button');
-      btn.className = 'image-btn';
-      btn.innerHTML = '🖼️ Görseli Göster';
-      btn.onclick = (function(f, t) { return function() { showImageModal(f, t); }; })(item.imageFile, item.title);
-      body.appendChild(btn);
+      bodyHtml += `<a class="rev-image-link" onclick="openModal('${item.imageFile}', '${item.title.replace(/'/g,"\\'")}')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Görsel Kanıtı İncele
+      </a>`;
     }
-    section.appendChild(header);
-    section.appendChild(body);
-    container.appendChild(section);
+
+    card.innerHTML = `
+      <div class="rev-card-inner">
+        <div class="rev-status-bar"></div>
+        <div style="flex:1;min-width:0;">
+          <details>
+            <summary class="rev-summary">
+              <span class="rev-num">#${String(item.id).padStart(2,'0')}</span>
+              <div class="rev-main">
+                <div class="rev-title">${item.title}</div>
+                <div class="rev-meta">
+                  <span class="status-pill ${statusClass[item.status]}">${statusLabel[item.status]}</span>
+                  ${item.hasImage ? '<span class="has-image-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Görsel mevcut</span>' : ''}
+                </div>
+              </div>
+              <svg class="rev-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="rev-body">${bodyHtml}</div>
+          </details>
+        </div>
+      </div>`;
+
+    list.appendChild(card);
   });
 }
-window.addEventListener('DOMContentLoaded', renderSections);
+
+// ── Modal ──
+function openModal(src, title) {
+  document.getElementById('modal-img').src = src;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', render);
 </script>
 </body>
 </html>

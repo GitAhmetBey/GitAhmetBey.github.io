@@ -12,28 +12,33 @@
   :root {
     --bg: #f8fafc;
     --surface: #ffffff;
-    --surface-subtle: #f1f5f9;
+    --surface-subtle: #f4f6f9;
     --border: #e2e8f0;
-    --border-subtle: #f1f5f9;
+    --border-subtle: #eef2f7;
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #94a3b8;
     --accent: #2563eb;
     --accent-light: #eff6ff;
     --accent-mid: #bfdbfe;
-    --open-color: #d97706;
-    --open-bg: #fffbeb;
-    --open-border: #fde68a;
-    --progress-color: #2563eb;
-    --progress-bg: #eff6ff;
-    --progress-border: #bfdbfe;
-    --done-color: #059669;
-    --done-bg: #ecfdf5;
-    --done-border: #a7f3d0;
-    --shadow-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
-    --shadow-md: 0 4px 16px rgba(15,23,42,.08), 0 1px 4px rgba(15,23,42,.04);
+
+    /* Status — muted, non-distracting */
+    --open-color: #b45309;
+    --open-bg: #fefce8;
+    --open-bar: #f59e0b40;      /* very translucent amber bar */
+    --prog-color: #1d4ed8;
+    --prog-bg: #eff6ff;
+    --prog-bar: #3b82f640;
+    --done-color: #047857;
+    --done-bg: #f0fdf4;
+    --done-bar: #10b98140;
+
+    --neutral-bar: #e2e8f0;     /* default bar color */
+
+    --shadow-sm: 0 1px 3px rgba(15,23,42,.05), 0 1px 2px rgba(15,23,42,.03);
+    --shadow-md: 0 4px 16px rgba(15,23,42,.07), 0 1px 4px rgba(15,23,42,.03);
     --shadow-lg: 0 12px 32px rgba(15,23,42,.10), 0 4px 8px rgba(15,23,42,.04);
-    --radius: 14px;
+    --radius: 12px;
     --radius-sm: 8px;
     --radius-xs: 6px;
     --font: 'DM Sans', system-ui, sans-serif;
@@ -41,7 +46,6 @@
   }
 
   html { scroll-behavior: smooth; }
-
   body {
     font-family: var(--font);
     background: var(--bg);
@@ -51,22 +55,23 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── Header ── */
+  /* ══════════════════════════════
+     HEADER
+  ══════════════════════════════ */
   .page-header {
-    background: var(--surface);
+    background: rgba(255,255,255,.93);
     border-bottom: 1px solid var(--border);
     padding: 0 2rem;
     position: sticky;
     top: 0;
     z-index: 100;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
   .header-inner {
-    max-width: 960px;
+    max-width: 980px;
     margin: 0 auto;
-    height: 60px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -78,220 +83,217 @@
     gap: 10px;
   }
   .brand-icon {
-    width: 32px;
-    height: 32px;
+    width: 30px; height: 30px;
     background: var(--accent);
-    border-radius: var(--radius-xs);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
   .brand-icon svg { color: white; }
   .brand-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -.01em;
+    font-size: 13px; font-weight: 600;
+    color: var(--text-primary); letter-spacing: -.01em;
   }
-  .brand-sub {
-    font-size: 11.5px;
-    color: var(--text-muted);
-    font-weight: 400;
-  }
+  .brand-sub { font-size: 11.5px; color: var(--text-muted); font-weight: 400; }
+
+  /* single line meta */
   .header-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .header-date {
     font-size: 12px;
     color: var(--text-muted);
-    font-weight: 500;
-    font-family: var(--mono);
-  }
-  .header-badge {
-    font-size: 11px;
-    font-weight: 600;
-    background: var(--accent-light);
-    color: var(--accent);
-    padding: 3px 10px;
-    border-radius: 100px;
-    border: 1px solid var(--accent-mid);
-    letter-spacing: .01em;
-  }
-
-  /* ── Main Layout ── */
-  .page-main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 2.5rem 2rem 4rem;
-  }
-
-  /* ── Hero ── */
-  .page-hero {
-    margin-bottom: 2.5rem;
-    animation: fadeUp .45s ease both;
-  }
-  .page-hero-eyebrow {
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: .6rem;
     display: flex;
     align-items: center;
     gap: 6px;
+    white-space: nowrap;
   }
-  .page-hero-eyebrow::before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 2px;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-  .page-hero h1 {
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -.03em;
-    line-height: 1.15;
-    margin-bottom: .5rem;
-  }
-  .page-hero-sub {
-    font-size: 15px;
-    color: var(--text-secondary);
-    font-weight: 400;
-    max-width: 520px;
+  .header-meta .sep { opacity: .4; }
+  .header-meta .readonly-pill {
+    font-size: 11px; font-weight: 600;
+    background: var(--surface-subtle);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 2px 9px; border-radius: 100px;
   }
 
-  /* ── Dashboard Cards ── */
+  /* ══════════════════════════════
+     MAIN
+  ══════════════════════════════ */
+  .page-main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2.2rem 2rem 4rem;
+  }
+
+  /* ══════════════════════════════
+     HERO + META TABLE
+  ══════════════════════════════ */
+  .hero-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    animation: fadeUp .4s ease both;
+  }
+  .page-hero { flex: 1; }
+  .page-hero-eyebrow {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: .09em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: .55rem;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .page-hero-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 16px; height: 2px;
+    background: var(--accent); border-radius: 2px;
+  }
+  .page-hero h1 {
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 700; color: var(--text-primary);
+    letter-spacing: -.03em; line-height: 1.15;
+    margin-bottom: .4rem;
+  }
+  .page-hero-sub {
+    font-size: 14px; color: var(--text-secondary); max-width: 460px;
+  }
+
+  /* Mini meta grid beside hero */
+  .hero-meta-table {
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    min-width: 210px;
+  }
+  .hmt-row {
+    display: flex;
+    align-items: center;
+    padding: .55rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    gap: .75rem;
+    font-size: 12.5px;
+  }
+  .hmt-row:last-child { border-bottom: none; }
+  .hmt-label {
+    color: var(--text-muted); font-weight: 500; width: 90px; flex-shrink: 0;
+  }
+  .hmt-value { color: var(--text-secondary); font-weight: 600; }
+  .hmt-badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 1px 8px; border-radius: 100px;
+  }
+  .hmt-badge.high {
+    background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca;
+  }
+  .hmt-badge.open-s {
+    background: var(--open-bg); color: var(--open-color);
+    border: 1px solid #fde68a;
+  }
+
+  /* ══════════════════════════════
+     DASHBOARD KPI CARDS — uniform
+  ══════════════════════════════ */
   .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-    animation: fadeUp .5s ease .1s both;
+    gap: .85rem;
+    margin-bottom: 2rem;
+    animation: fadeUp .45s ease .08s both;
   }
   .dash-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 1.1rem 1.2rem 1.25rem;
+    padding: 1rem 1.1rem 1.1rem;
     box-shadow: var(--shadow-sm);
-    transition: box-shadow .2s, transform .2s;
+    transition: box-shadow .18s, transform .18s;
     position: relative;
-    overflow: hidden;
   }
-  .dash-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 3px 3px 0 0;
-  }
-  .dash-card.total::before { background: #94a3b8; }
-  .dash-card.done::before { background: var(--done-color); }
-  .dash-card.pending::before { background: var(--open-color); }
-  .dash-card.rate::before { background: var(--accent); }
   .dash-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  /* Subtle top accent — same color for all, differentiator is the label */
+  .dash-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: var(--border); border-radius: 2px 2px 0 0;
+  }
   .dash-label {
-    font-size: 11.5px;
-    font-weight: 600;
-    color: var(--text-muted);
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    margin-bottom: .5rem;
+    font-size: 11px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: .06em;
+    text-transform: uppercase; margin-bottom: .45rem;
   }
   .dash-value {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -.04em;
-    line-height: 1;
-    color: var(--text-primary);
-    margin-bottom: .25rem;
-  }
-  .dash-card.done .dash-value { color: var(--done-color); }
-  .dash-card.pending .dash-value { color: var(--open-color); }
-  .dash-card.rate .dash-value { color: var(--accent); }
-  .dash-caption {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  /* ── Progress ── */
-  .progress-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 2.5rem;
-    box-shadow: var(--shadow-sm);
-    animation: fadeUp .5s ease .18s both;
-  }
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: .9rem;
-  }
-  .progress-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-  }
-  .progress-pct {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--accent);
+    font-size: 2rem; font-weight: 700;
+    letter-spacing: -.05em; line-height: 1;
+    color: var(--text-primary); margin-bottom: .2rem;
     font-family: var(--mono);
   }
-  .progress-track {
-    height: 6px;
-    background: var(--surface-subtle);
-    border-radius: 100px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #2563eb, #3b82f6);
-    border-radius: 100px;
-    transition: width .6s cubic-bezier(.4,0,.2,1);
-  }
+  /* Only the rate card gets a colour hint on its number */
+  .dash-card.rate .dash-value { color: var(--accent); }
+  .dash-caption { font-size: 11.5px; color: var(--text-muted); }
 
-  /* ── Section Header ── */
-  .items-header {
+  /* ══════════════════════════════
+     FILTER BAR
+  ══════════════════════════════ */
+  .filter-bar {
     display: flex;
     align-items: center;
+    gap: .5rem;
+    margin-bottom: 1.4rem;
+    flex-wrap: wrap;
+    animation: fadeUp .45s ease .14s both;
+  }
+  .filter-label {
+    font-size: 11.5px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: .04em;
+    text-transform: uppercase; margin-right: .25rem;
+  }
+  .filter-btn {
+    font-family: var(--font);
+    font-size: 12px; font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover {
+    border-color: var(--accent); color: var(--accent);
+    background: var(--accent-light);
+  }
+  .filter-btn.active {
+    background: var(--accent); color: white;
+    border-color: var(--accent);
+    box-shadow: 0 2px 8px rgba(37,99,235,.22);
+  }
+
+  /* ══════════════════════════════
+     ITEMS HEADER
+  ══════════════════════════════ */
+  .items-header {
+    display: flex; align-items: center;
     justify-content: space-between;
-    margin-bottom: 1.1rem;
-    animation: fadeUp .5s ease .22s both;
+    margin-bottom: .85rem;
   }
   .items-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-muted);
-    letter-spacing: .05em;
-    text-transform: uppercase;
+    font-size: 11.5px; font-weight: 700;
+    color: var(--text-muted); letter-spacing: .06em; text-transform: uppercase;
   }
-  .items-count {
-    font-size: 12px;
-    color: var(--text-muted);
+  .items-count-tag {
+    font-size: 11.5px; color: var(--text-muted);
     font-family: var(--mono);
     background: var(--surface-subtle);
-    padding: 3px 10px;
-    border-radius: 100px;
+    padding: 3px 10px; border-radius: 100px;
     border: 1px solid var(--border);
   }
 
-  /* ── Revision Cards ── */
-  .revision-list {
-    display: flex;
-    flex-direction: column;
-    gap: .75rem;
-  }
+  /* ══════════════════════════════
+     REVISION CARDS
+  ══════════════════════════════ */
+  .revision-list { display: flex; flex-direction: column; gap: .6rem; }
 
   .rev-card {
     background: var(--surface);
@@ -299,370 +301,256 @@
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
-    animation: fadeUp .5s ease both;
-    transition: box-shadow .2s;
+    animation: fadeUp .45s ease both;
+    transition: box-shadow .18s;
   }
   .rev-card:hover { box-shadow: var(--shadow-md); }
+  .rev-card.hidden { display: none; }
 
-  .rev-card-inner {
-    display: flex;
-  }
+  .rev-card-inner { display: flex; }
 
-  /* Status line */
+  /* Status bar — thinner (3px), muted colors */
   .rev-status-bar {
-    width: 4px;
-    flex-shrink: 0;
-    border-radius: 0;
-    transition: background .3s;
+    width: 3px; flex-shrink: 0;
   }
-  .rev-card[data-status="open"] .rev-status-bar { background: var(--open-color); }
-  .rev-card[data-status="progress"] .rev-status-bar { background: var(--accent); }
-  .rev-card[data-status="done"] .rev-status-bar { background: var(--done-color); }
+  .rev-card[data-status="open"]     .rev-status-bar { background: #f59e0b80; }
+  .rev-card[data-status="progress"] .rev-status-bar { background: #3b82f680; }
+  .rev-card[data-status="done"]     .rev-status-bar { background: #10b98180; }
 
-  /* Accordion trigger */
+  /* Accordion */
   .rev-summary {
-    flex: 1;
-    padding: 1.1rem 1.3rem;
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    min-height: 0;
-    list-style: none;
-    -webkit-appearance: none;
+    flex: 1; padding: .85rem 1.15rem;
+    cursor: pointer; user-select: none;
+    display: flex; align-items: center; gap: .85rem;
+    list-style: none; -webkit-appearance: none;
   }
   .rev-summary::-webkit-details-marker { display: none; }
 
   .rev-num {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-muted);
-    font-family: var(--mono);
+    font-size: 10.5px; font-weight: 600;
+    color: var(--text-muted); font-family: var(--mono);
     background: var(--surface-subtle);
-    padding: 3px 8px;
-    border-radius: var(--radius-xs);
-    border: 1px solid var(--border);
-    flex-shrink: 0;
-    letter-spacing: .03em;
+    padding: 2px 7px; border-radius: 5px;
+    border: 1px solid var(--border); flex-shrink: 0;
+    letter-spacing: .02em;
   }
-
-  .rev-main {
-    flex: 1;
-    min-width: 0;
-  }
+  .rev-main { flex: 1; min-width: 0; }
   .rev-title {
-    font-size: 14.5px;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -.01em;
-    line-height: 1.35;
+    font-size: 14px; font-weight: 600;
+    color: var(--text-primary); letter-spacing: -.01em; line-height: 1.3;
   }
   .rev-card[data-status="done"] .rev-title {
     color: var(--text-muted);
-    text-decoration: line-through;
-    text-decoration-thickness: 1px;
+    text-decoration: line-through; text-decoration-thickness: 1px;
+  }
+  .rev-meta {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 3px; flex-wrap: wrap;
   }
 
-  .rev-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 4px;
-    flex-wrap: wrap;
-  }
+  /* Status pill */
   .status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 9px;
-    border-radius: 100px;
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10.5px; font-weight: 600;
+    padding: 1.5px 8px; border-radius: 100px;
     letter-spacing: .01em;
   }
   .status-pill::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    flex-shrink: 0;
+    content: ''; width: 5px; height: 5px;
+    border-radius: 50%; flex-shrink: 0;
   }
   .status-pill.open {
-    background: var(--open-bg);
-    color: var(--open-color);
-    border: 1px solid var(--open-border);
+    background: var(--open-bg); color: var(--open-color);
+    border: 1px solid #fde68a;
   }
   .status-pill.open::before { background: var(--open-color); }
   .status-pill.progress {
-    background: var(--progress-bg);
-    color: var(--progress-color);
-    border: 1px solid var(--progress-border);
+    background: var(--prog-bg); color: var(--prog-color);
+    border: 1px solid var(--accent-mid);
   }
-  .status-pill.progress::before { background: var(--progress-color); animation: pulse 1.8s infinite; }
+  .status-pill.progress::before { background: var(--prog-color); animation: pulse 1.8s infinite; }
   .status-pill.done {
-    background: var(--done-bg);
-    color: var(--done-color);
-    border: 1px solid var(--done-border);
+    background: var(--done-bg); color: var(--done-color);
+    border: 1px solid #a7f3d0;
   }
   .status-pill.done::before { background: var(--done-color); }
-  .has-image-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 10.5px;
-    color: var(--text-muted);
-    background: var(--surface-subtle);
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-weight: 500;
+
+  /* Attachment tag — more prominent */
+  .attach-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10.5px; font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid var(--accent-mid);
+    padding: 1.5px 8px; border-radius: 100px;
   }
 
   .rev-chevron {
-    flex-shrink: 0;
-    color: var(--text-muted);
-    transition: transform .25s cubic-bezier(.4,0,.2,1);
+    flex-shrink: 0; color: var(--text-muted);
+    transition: transform .22s cubic-bezier(.4,0,.2,1);
   }
   details[open] .rev-chevron { transform: rotate(180deg); }
 
   /* Detail body */
   .rev-body {
-    padding: 0 1.3rem 1.3rem 1.3rem;
-    margin-left: 0;
+    padding: 0 1.15rem 1.1rem 1.15rem;
     border-top: 1px solid var(--border-subtle);
   }
   .rev-description {
-    font-size: 13.5px;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    padding-top: .9rem;
+    font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+    padding-top: .8rem;
   }
   .rev-description strong { color: var(--text-primary); font-weight: 600; }
   .rev-list {
-    margin: .75rem 0 0 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+    margin: .65rem 0 0 0; padding: 0; list-style: none;
+    display: flex; flex-direction: column; gap: .4rem;
   }
   .rev-list li {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.55;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: .6rem .9rem;
+    font-size: 12.5px; color: var(--text-secondary); line-height: 1.55;
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: .55rem .85rem;
     background: var(--surface-subtle);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
   }
   .rev-list li::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--text-muted);
-    flex-shrink: 0;
-    margin-top: 6px;
+    content: ''; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--text-muted); flex-shrink: 0; margin-top: 6px;
   }
   .rev-list li a {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-    border-bottom: 1px solid transparent;
-    transition: border-color .15s;
+    color: var(--accent); text-decoration: none; font-weight: 500;
+    border-bottom: 1px solid transparent; transition: border-color .14s;
   }
   .rev-list li a:hover { border-bottom-color: var(--accent); }
   .rev-blockquote {
-    margin-top: .75rem;
-    padding: .7rem 1rem;
+    margin-top: .65rem; padding: .65rem .9rem;
     border-left: 3px solid var(--border);
     background: var(--surface-subtle);
     border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
-    font-size: 13px;
-    color: var(--text-muted);
-    font-style: italic;
+    font-size: 12.5px; color: var(--text-muted); font-style: italic;
   }
   .rev-image-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: .9rem;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--accent);
-    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: .8rem; font-size: 12px; font-weight: 600;
+    color: var(--accent); text-decoration: none;
     border: 1px solid var(--accent-mid);
     background: var(--accent-light);
-    padding: 6px 14px;
-    border-radius: 100px;
-    transition: all .18s;
-    cursor: pointer;
+    padding: 5px 13px; border-radius: 100px;
+    transition: all .15s; cursor: pointer;
   }
   .rev-image-link:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-    box-shadow: 0 4px 12px rgba(37,99,235,.2);
+    background: var(--accent); color: white; border-color: var(--accent);
+    box-shadow: 0 3px 10px rgba(37,99,235,.2);
   }
-  .rev-image-link svg { transition: inherit; }
 
-  /* ── Modal ── */
+  /* ══════════════════════════════
+     MODAL
+  ══════════════════════════════ */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    background: rgba(15,23,42,.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem;
-    cursor: pointer;
-    animation: fadeIn .2s ease;
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(15,23,42,.72);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    justify-content: center; align-items: center;
+    padding: 1.5rem; cursor: pointer;
   }
-  .modal-overlay.active { display: flex; }
+  .modal-overlay.active { display: flex; animation: fadeIn .18s ease; }
   .modal-box {
-    background: var(--surface);
-    border-radius: 18px;
-    max-width: 780px;
-    width: 100%;
-    max-height: 88vh;
-    overflow: hidden;
-    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,.08);
-    cursor: default;
-    display: flex;
-    flex-direction: column;
-    animation: scaleIn .25s cubic-bezier(.34,1.56,.64,1);
+    background: var(--surface); border-radius: 16px;
+    max-width: 800px; width: 100%; max-height: 88vh; overflow: hidden;
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,.06);
+    cursor: default; display: flex; flex-direction: column;
+    animation: scaleIn .22s cubic-bezier(.34,1.4,.64,1);
   }
   .modal-header {
-    padding: 1.1rem 1.4rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    padding: 1rem 1.3rem; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   }
-  .modal-title {
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -.01em;
-  }
+  .modal-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
   .modal-close {
-    width: 30px;
-    height: 30px;
-    background: var(--surface-subtle);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    transition: all .15s;
-    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--surface-subtle); border: 1px solid var(--border);
+    border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); transition: all .14s; flex-shrink: 0;
   }
   .modal-close:hover { background: var(--border); color: var(--text-primary); }
   .modal-body {
-    padding: 1.25rem;
-    overflow-y: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 1.2rem; overflow-y: auto;
+    display: flex; align-items: center; justify-content: center;
     background: var(--surface-subtle);
   }
   .modal-body img {
-    max-width: 100%;
-    max-height: calc(88vh - 100px);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-md);
-    display: block;
+    max-width: 100%; max-height: calc(88vh - 90px);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-md); display: block;
   }
 
-  /* ── Footer ── */
+  /* ══════════════════════════════
+     FOOTER
+  ══════════════════════════════ */
   .page-footer {
-    margin-top: 3.5rem;
-    padding-top: 1.5rem;
+    margin-top: 3rem; padding-top: 1.25rem;
     border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: .5rem;
-    animation: fadeUp .5s ease .3s both;
+    display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+    animation: fadeUp .45s ease .28s both;
   }
-  .footer-note {
-    font-size: 12px;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .footer-left {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12.5px; color: var(--text-secondary);
   }
-  .readonly-tag {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-muted);
-    background: var(--surface-subtle);
-    border: 1px solid var(--border);
-    padding: 2px 10px;
-    border-radius: 100px;
-    letter-spacing: .02em;
+  .footer-left svg { color: var(--text-muted); flex-shrink: 0; }
+  .footer-right {
+    font-size: 11.5px; color: var(--text-muted);
+    font-family: var(--mono);
   }
 
-  /* ── Animations ── */
+  /* ══════════════════════════════
+     ANIMATIONS
+  ══════════════════════════════ */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity:0; transform:translateY(8px); }
+    to   { opacity:1; transform:translateY(0); }
   }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+  @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
   @keyframes scaleIn {
-    from { opacity: 0; transform: scale(.95); }
-    to { opacity: 1; transform: scale(1); }
+    from { opacity:0; transform:scale(.96); }
+    to   { opacity:1; transform:scale(1); }
   }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .4; }
-  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-  /* Staggered cards */
-  .rev-card:nth-child(1) { animation-delay: .25s; }
-  .rev-card:nth-child(2) { animation-delay: .3s; }
-  .rev-card:nth-child(3) { animation-delay: .35s; }
-  .rev-card:nth-child(4) { animation-delay: .4s; }
-  .rev-card:nth-child(5) { animation-delay: .45s; }
-  .rev-card:nth-child(6) { animation-delay: .5s; }
-  .rev-card:nth-child(7) { animation-delay: .55s; }
+  .rev-card:nth-child(1){animation-delay:.22s}
+  .rev-card:nth-child(2){animation-delay:.27s}
+  .rev-card:nth-child(3){animation-delay:.31s}
+  .rev-card:nth-child(4){animation-delay:.35s}
+  .rev-card:nth-child(5){animation-delay:.39s}
+  .rev-card:nth-child(6){animation-delay:.43s}
+  .rev-card:nth-child(7){animation-delay:.47s}
 
-  /* ── Responsive ── */
-  @media (max-width: 700px) {
-    .page-main { padding: 1.5rem 1rem 3rem; }
+  /* ══════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════ */
+  @media (max-width: 760px) {
+    .hero-row { flex-direction: column; gap: 1.2rem; }
+    .hero-meta-table { min-width: 0; width: 100%; }
     .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
     .page-header { padding: 0 1rem; }
+    .page-main { padding: 1.5rem 1rem 3rem; }
     .brand-sub { display: none; }
-    .header-date { display: none; }
   }
-  @media (max-width: 400px) {
-    .dashboard-grid { grid-template-columns: 1fr 1fr; gap: .6rem; }
-    .dash-value { font-size: 1.6rem; }
+  @media (max-width: 420px) {
+    .dashboard-grid { gap: .6rem; }
+    .dash-value { font-size: 1.7rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- ── Sticky Header ── -->
+<!-- ══════ HEADER ══════ -->
 <header class="page-header">
   <div class="header-inner">
     <div class="header-brand">
       <div class="brand-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
         </svg>
       </div>
@@ -672,35 +560,60 @@
       </div>
     </div>
     <div class="header-meta">
-      <span class="header-date" id="header-date">—</span>
-      <span class="header-badge">Salt Okunur</span>
+      <span>Son Güncelleme: <span id="header-date">—</span></span>
+      <span class="sep">·</span>
+      <span class="readonly-pill">Salt Okunur</span>
     </div>
   </div>
 </header>
 
-<!-- ── Main Content ── -->
+<!-- ══════ MAIN ══════ -->
 <main class="page-main">
 
-  <!-- Hero -->
-  <div class="page-hero">
-    <div class="page-hero-eyebrow">Revizyon &amp; Eksik Analizi</div>
-    <h1>Canlı Ortam Test Raporu</h1>
-    <p class="page-hero-sub">Canlı ortam testleri sürecinde tespit edilen kritik eksiklikler ve revizyon maddeleri. Web sitesi, yönetim paneli ve mobil uygulama kapsamında.</p>
+  <!-- Hero + Meta Table -->
+  <div class="hero-row">
+    <div class="page-hero">
+      <div class="page-hero-eyebrow">Revizyon &amp; Eksik Analizi</div>
+      <h1>Canlı Ortam Test Raporu</h1>
+      <p class="page-hero-sub">Canlı ortam testleri sürecinde tespit edilen kritik eksiklikler ve revizyon maddeleri. Web sitesi, yönetim paneli ve mobil uygulama kapsamında.</p>
+    </div>
+    <div class="hero-meta-table">
+      <div class="hmt-row">
+        <span class="hmt-label">Proje Türü</span>
+        <span class="hmt-value">Web + Mobil</span>
+      </div>
+      <div class="hmt-row">
+        <span class="hmt-label">Oluşturulma</span>
+        <span class="hmt-value" id="meta-date">—</span>
+      </div>
+      <div class="hmt-row">
+        <span class="hmt-label">Durum</span>
+        <span class="hmt-badge open-s">Açık</span>
+      </div>
+      <div class="hmt-row">
+        <span class="hmt-label">Öncelik</span>
+        <span class="hmt-badge high">Yüksek</span>
+      </div>
+      <div class="hmt-row">
+        <span class="hmt-label">Kapsam</span>
+        <span class="hmt-value">3 Platform</span>
+      </div>
+    </div>
   </div>
 
-  <!-- Dashboard Grid -->
+  <!-- KPI Cards -->
   <div class="dashboard-grid">
-    <div class="dash-card total">
+    <div class="dash-card">
       <div class="dash-label">Toplam</div>
       <div class="dash-value" id="stat-total">—</div>
       <div class="dash-caption">revizyon maddesi</div>
     </div>
-    <div class="dash-card done">
+    <div class="dash-card">
       <div class="dash-label">Tamamlanan</div>
       <div class="dash-value" id="stat-done">—</div>
       <div class="dash-caption">madde tamamlandı</div>
     </div>
-    <div class="dash-card pending">
+    <div class="dash-card">
       <div class="dash-label">Bekleyen</div>
       <div class="dash-value" id="stat-pending">—</div>
       <div class="dash-caption">madde açık</div>
@@ -712,44 +625,43 @@
     </div>
   </div>
 
-  <!-- Progress -->
-  <div class="progress-section">
-    <div class="progress-header">
-      <span class="progress-title">Genel İlerleme Durumu</span>
-      <span class="progress-pct" id="prog-pct">%0</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
-    </div>
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <span class="filter-label">Filtrele:</span>
+    <button class="filter-btn active" data-filter="all">Tümü</button>
+    <button class="filter-btn" data-filter="open">Açık</button>
+    <button class="filter-btn" data-filter="progress">Devam Ediyor</button>
+    <button class="filter-btn" data-filter="done">Tamamlandı</button>
+    <button class="filter-btn" data-filter="image">📎 Görsel Eki Olanlar</button>
   </div>
 
-  <!-- Items Header -->
+  <!-- Items header -->
   <div class="items-header">
     <span class="items-title">Revizyon Maddeleri</span>
-    <span class="items-count" id="items-count">0 madde</span>
+    <span class="items-count-tag" id="items-count-tag">— madde</span>
   </div>
 
-  <!-- Revision Cards -->
+  <!-- Revision list -->
   <div class="revision-list" id="revision-list"></div>
 
   <!-- Footer -->
   <footer class="page-footer">
-    <div class="footer-note">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Bu rapor yalnızca izleme ve bilgilendirme amacıyla sunulmaktadır.
+    <div class="footer-left">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Bu rapor yalnızca izleme ve bilgilendirme amacıyla hazırlanmıştır.
     </div>
-    <span class="readonly-tag">İzleme Modu</span>
+    <div class="footer-right" id="footer-date">—</div>
   </footer>
 
 </main>
 
-<!-- ── Modal ── -->
+<!-- ══════ MODAL ══════ -->
 <div class="modal-overlay" id="modal" onclick="closeModal()">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="modal-header">
       <span class="modal-title" id="modal-title">Görsel Kanıt</span>
       <button class="modal-close" onclick="closeModal()" aria-label="Kapat">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="modal-body">
@@ -759,15 +671,12 @@
 </div>
 
 <script>
-// ── Data ──
 const revisionData = {
-  project: "Web, Panel & Mobil",
   items: [
     {
       id: 1,
       title: "Kayıt Ekranı: Mevzuat ve Şart Onayları",
-      status: "open",
-      hasImage: false,
+      status: "open", hasImage: false,
       description: "Kayıt formuna, kullanıcının zorunlu olarak işaretlemesi gereken onay mekanizmaları eklenmelidir. Bu onaylar tamamlanmadan <strong>\"Kayıt Ol\"</strong> işlemi gerçekleştirilememeli, her metin ilgili dokümana yönlendiren bağlantı içermelidir.",
       listItems: [
         "Aydınlatma Metni'ni okudum ve kabul ediyorum.",
@@ -778,85 +687,64 @@ const revisionData = {
       ]
     },
     {
-      id: 2,
-      title: "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası",
-      status: "open",
-      hasImage: true,
-      imageFile: "2.png",
-      description: "Eğitim durumu bilgisi sisteme hatalı yansımaktadır. Veritabanı ile arayüz eşleşmesi sağlanmalı, doğru veri çekme mekanizması kurgulanmalıdır.",
+      id: 2, title: "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası",
+      status: "open", hasImage: true, imageFile: "2.png",
+      description: "Eğitim durumu bilgisi sisteme hatalı yansımaktadır. Veritabanı ile arayüz eşleşmesi sağlanmalı, doğru veri çekme mekanizması kurgulanmalıdır."
     },
     {
-      id: 3,
-      title: "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)",
-      status: "open",
-      hasImage: false,
-      description: "15 yaşından küçük kullanıcıların sisteme kaydı engellenmelidir. Yaş doğrulama kontrolü kayıt akışına entegre edilmeli ve aşağıdaki hata bildirimi gösterilmelidir.",
+      id: 3, title: "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)",
+      status: "open", hasImage: false,
+      description: "15 yaşından küçük kullanıcıların sisteme kaydı engellenmelidir. Yaş doğrulama kontrolü kayıt akışına entegre edilmeli ve aşağıdaki mesaj gösterilmelidir.",
       blockquote: "En az 15 yaşında olmalısınız."
     },
     {
-      id: 4,
-      title: "Mola Yönetimi: Ardışık Mola Engelleme",
-      status: "open",
-      hasImage: false,
+      id: 4, title: "Mola Yönetimi: Ardışık Mola Engelleme",
+      status: "open", hasImage: false,
       description: "Mola bitişi ile yeni mola talebi arasında zorunlu bir bekleme süresi tanımlanmalıdır. Ardışık mola kullanımının önüne geçmek için sistem tarafı kısıtlama eklenmeli."
     },
     {
-      id: 5,
-      title: "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği",
-      status: "open",
-      hasImage: true,
-      imageFile: "5.png",
+      id: 5, title: "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği",
+      status: "open", hasImage: true, imageFile: "5.png",
       description: "Yönetim panelinde kayıtlı üye bilgilerinin düzenlenmesi mümkün değildir. Üyelik bilgilerini güncellemek için düzenleme arayüzü ve yetkilendirme sistemi oluşturulmalıdır.",
       blockquote: "Üyelik düzenleme özelliği eklenmedi."
     },
     {
-      id: 6,
-      title: "Mobil Uygulama: Rezervasyon Hatası",
-      status: "open",
-      hasImage: true,
-      imageFile: "6.jpeg",
+      id: 6, title: "Mobil Uygulama: Rezervasyon Hatası",
+      status: "open", hasImage: true, imageFile: "6.jpeg",
       description: "Mobil uygulama üzerinden masa rezervasyonu yapılmaya çalışıldığında hata alınmaktadır. Uygun saatlerin sorgulanması ve listelenmesi sistematik biçimde incelenmelidir.",
       blockquote: "Uygun saatler bulunamadı."
     },
     {
-      id: 7,
-      title: "İkinci Telefon Numarası Zorunluluğu",
-      status: "open",
-      hasImage: true,
-      imageFile: "7.jpeg",
+      id: 7, title: "İkinci Telefon Numarası Zorunluluğu",
+      status: "open", hasImage: true, imageFile: "7.jpeg",
       description: "Kayıt formuna opsiyonel ya da zorunlu ikinci telefon numarası alanı eklenmelidir. Bu alan, acil iletişim ve üye doğrulama süreçleri için kullanılacaktır.",
       blockquote: "Lütfen ikinci telefon numaranızı giriniz."
     }
   ]
 };
 
-// ── Status helpers ──
 const statusLabel = { open: "Açık", progress: "Devam Ediyor", done: "Tamamlandı" };
-const statusClass = { open: "open", progress: "progress", done: "done" };
+let activeFilter = "all";
 
-// ── Render ──
+function dateStr() {
+  return new Date().toLocaleDateString('tr-TR', { day:'2-digit', month:'long', year:'numeric' });
+}
+
 function render() {
   const items = revisionData.items;
   const total = items.length;
   const done = items.filter(i => i.status === "done").length;
   const pending = items.filter(i => i.status !== "done").length;
   const rate = total ? Math.round(done / total * 100) : 0;
+  const d = dateStr();
 
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-total').textContent   = total;
+  document.getElementById('stat-done').textContent    = done;
   document.getElementById('stat-pending').textContent = pending;
-  document.getElementById('stat-rate').textContent = `%${rate}`;
-  document.getElementById('prog-pct').textContent = `%${rate}`;
-  document.getElementById('items-count').textContent = `${total} madde`;
-  setTimeout(() => {
-    document.getElementById('prog-fill').style.width = rate + '%';
-  }, 100);
-
-  // Header date
-  const now = new Date();
-  document.getElementById('header-date').textContent = now.toLocaleDateString('tr-TR', {
-    day: '2-digit', month: 'long', year: 'numeric'
-  });
+  document.getElementById('stat-rate').textContent    = '%' + rate;
+  document.getElementById('header-date').textContent  = d;
+  document.getElementById('meta-date').textContent    = d;
+  document.getElementById('footer-date').textContent  = 'Revizyon Takip Sistemi · ' + d;
 
   const list = document.getElementById('revision-list');
   list.innerHTML = '';
@@ -864,41 +752,41 @@ function render() {
   items.forEach(item => {
     const card = document.createElement('div');
     card.className = 'rev-card';
-    card.dataset.status = item.status;
+    card.dataset.status  = item.status;
+    card.dataset.hasImage = item.hasImage ? '1' : '0';
 
-    // Build detail body HTML
     let bodyHtml = '';
-    if (item.description) {
-      bodyHtml += `<p class="rev-description">${item.description}</p>`;
-    }
-    if (item.listItems && item.listItems.length) {
+    if (item.description) bodyHtml += `<p class="rev-description">${item.description}</p>`;
+    if (item.listItems?.length) {
       bodyHtml += '<ul class="rev-list">' + item.listItems.map(li => `<li>${li}</li>`).join('') + '</ul>';
     }
-    if (item.blockquote) {
-      bodyHtml += `<div class="rev-blockquote">${item.blockquote}</div>`;
-    }
+    if (item.blockquote) bodyHtml += `<div class="rev-blockquote">${item.blockquote}</div>`;
     if (item.hasImage && item.imageFile) {
-      bodyHtml += `<a class="rev-image-link" onclick="openModal('${item.imageFile}', '${item.title.replace(/'/g,"\\'")}')">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      bodyHtml += `<a class="rev-image-link" onclick="openModal('${item.imageFile}','${item.title.replace(/'/g,"\\'")}')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         Görsel Kanıtı İncele
       </a>`;
     }
 
+    const attachTag = item.hasImage
+      ? `<span class="attach-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>📎 Kanıt Eki</span>`
+      : '';
+
     card.innerHTML = `
       <div class="rev-card-inner">
         <div class="rev-status-bar"></div>
-        <div style="flex:1;min-width:0;">
+        <div style="flex:1;min-width:0">
           <details>
             <summary class="rev-summary">
               <span class="rev-num">#${String(item.id).padStart(2,'0')}</span>
               <div class="rev-main">
                 <div class="rev-title">${item.title}</div>
                 <div class="rev-meta">
-                  <span class="status-pill ${statusClass[item.status]}">${statusLabel[item.status]}</span>
-                  ${item.hasImage ? '<span class="has-image-tag"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Görsel mevcut</span>' : ''}
+                  <span class="status-pill ${item.status}">${statusLabel[item.status]}</span>
+                  ${attachTag}
                 </div>
               </div>
-              <svg class="rev-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              <svg class="rev-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
             </summary>
             <div class="rev-body">${bodyHtml}</div>
           </details>
@@ -907,9 +795,30 @@ function render() {
 
     list.appendChild(card);
   });
+
+  applyFilter(activeFilter);
 }
 
-// ── Modal ──
+function applyFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+  const cards = document.querySelectorAll('.rev-card');
+  let visible = 0;
+  cards.forEach(c => {
+    let show = false;
+    if (f === 'all')      show = true;
+    else if (f === 'image') show = c.dataset.hasImage === '1';
+    else                  show = c.dataset.status === f;
+    c.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  document.getElementById('items-count-tag').textContent = visible + ' madde';
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
+});
+
 function openModal(src, title) {
   document.getElementById('modal-img').src = src;
   document.getElementById('modal-title').textContent = title;
@@ -922,8 +831,13 @@ function closeModal() {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// ── Init ──
 document.addEventListener('DOMContentLoaded', render);
+// Wire filter buttons after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
+  });
+});
 </script>
 </body>
 </html>

@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --bg: #f5f5f7;
     --win-bg: #ffffff;
@@ -30,7 +29,6 @@
     --radius-lg: 14px;
     --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
   }
-
   body {
     font-family: var(--font);
     background: var(--bg);
@@ -40,8 +38,6 @@
     justify-content: center;
     padding: 40px 20px;
   }
-
-  /* macOS tarzı pencere - geniş akordiyon */
   .window {
     width: 100%;
     max-width: 1400px;
@@ -52,7 +48,6 @@
     box-shadow: 0 2px 16px rgba(0,0,0,0.08), 0 0.5px 2px rgba(0,0,0,0.06);
     overflow: visible;
   }
-
   .titlebar {
     background: var(--surface);
     border-bottom: 0.5px solid var(--border);
@@ -60,20 +55,16 @@
     text-align: center;
     user-select: none;
   }
-
   .win-title {
     font-size: 14px;
     font-weight: 500;
     color: var(--text-primary);
     letter-spacing: -0.2px;
   }
-
   .body { 
     padding: 32px 28px;
     min-height: calc(100vh - 60px);
   }
-
-  /* progress bar sade, minimal */
   .progress-wrap {
     margin: 0 0 28px 0;
     background: var(--surface);
@@ -110,9 +101,7 @@
     color: var(--text-primary);
     font-variant-numeric: tabular-nums;
   }
-
   .items { display: flex; flex-direction: column; gap: 8px; }
-
   .item {
     border: 0.5px solid var(--border);
     border-radius: var(--radius);
@@ -121,7 +110,6 @@
     transition: border-color 0.15s;
   }
   .item:hover { border-color: var(--border-med); }
-
   .item-header {
     display: flex;
     align-items: center;
@@ -133,7 +121,6 @@
     transition: background 0.15s;
   }
   .item-header:hover { background: var(--surface); }
-
   .header-left {
     display: flex;
     align-items: center;
@@ -141,7 +128,6 @@
     flex: 1;
     min-width: 0;
   }
-
   .item-num {
     font-size: 12px;
     color: var(--text-tertiary);
@@ -150,7 +136,6 @@
     width: 28px;
     font-weight: 500;
   }
-
   .item-title {
     font-size: 14px;
     font-weight: 500;
@@ -159,7 +144,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
   .tag {
     font-size: 10px; font-weight: 500;
     padding: 2px 8px; border-radius: 20px;
@@ -168,13 +152,11 @@
     color: var(--warn-text);
     border: 0.5px solid var(--warn-border);
   }
-
   .tag-done {
     background: #e7f7ed;
     color: #1e7b3a;
     border-color: rgba(40,202,65,0.25);
   }
-
   .chevron {
     font-size: 16px;
     color: var(--text-tertiary);
@@ -182,7 +164,6 @@
     transition: transform 0.2s ease;
   }
   .chevron.open { transform: rotate(180deg); }
-
   .item-detail {
     max-height: 0;
     overflow: hidden;
@@ -193,15 +174,12 @@
     max-height: 620px;
     border-top-width: 0.5px;
   }
-
   .item-detail-inner { padding: 14px 20px 18px 48px; }
-
   .item-desc {
     font-size: 13px;
     color: var(--text-secondary);
     line-height: 1.65;
   }
-
   .bullet-list { margin-top: 10px; padding-left: 18px; }
   .bullet-list li {
     font-size: 13px;
@@ -211,7 +189,6 @@
   }
   .bullet-list a { color: var(--blue); text-decoration: none; }
   .bullet-list a:hover { text-decoration: underline; }
-
   .img-btn {
     margin-top: 12px;
     font-size: 11px; font-weight: 500;
@@ -226,47 +203,52 @@
     text-decoration: none;
   }
   .img-btn:hover { background: #005bbf; }
-
-  /* modal görsel */
+  /* tamamlanma tarihi rozeti */
+  .date-badge {
+    font-size: 10px;
+    font-weight: 500;
+    color: #1e7b3a;
+    background: #e7f7ed;
+    border: 0.5px solid rgba(40,202,65,0.25);
+    border-radius: 20px;
+    padding: 2px 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  /* modal */
   .modal {
     display: none;
     position: fixed;
     z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.85);
     justify-content: center;
     align-items: center;
     cursor: pointer;
   }
   .modal-content {
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 90%; max-height: 90%;
     background: transparent;
     position: relative;
   }
   .modal-content img {
-    max-width: 100%;
-    max-height: 80vh;
+    max-width: 100%; max-height: 80vh;
     border-radius: 12px;
     box-shadow: 0 20px 35px rgba(0,0,0,0.3);
   }
   .close-modal {
     position: absolute;
-    top: -40px;
-    right: 0;
+    top: -40px; right: 0;
     color: white;
     font-size: 32px;
     cursor: pointer;
     background: rgba(0,0,0,0.5);
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
   }
   .modal-caption {
     text-align: center;
@@ -279,7 +261,6 @@
     display: inline-block;
   }
   .caption-wrapper { text-align: center; }
-
   @media (max-width: 820px) {
     .window { min-width: auto; max-width: 96vw; }
     body { padding: 20px 12px; }
@@ -289,25 +270,19 @@
 </style>
 </head>
 <body>
-
 <div class="window">
   <div class="titlebar">
     <div class="win-title">Revizyon ve Eksik Listesi</div>
   </div>
-
   <div class="body">
-    <!-- İlerleme çubuğu - sade ve temiz -->
     <div class="progress-wrap">
       <span class="progress-label">✅ Tamamlanma durumu</span>
       <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
       <span class="progress-stats" id="progStats">0 / 0</span>
     </div>
-
     <div class="items" id="itemsContainer"></div>
   </div>
 </div>
-
-<!-- Görsel modal -->
 <div id="imageModal" class="modal" onclick="closeModal()">
   <div class="modal-content" onclick="event.stopPropagation()">
     <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -315,14 +290,13 @@
     <div class="caption-wrapper"><div class="modal-caption" id="modalCaption"></div></div>
   </div>
 </div>
-
 <script>
-  // ---------- REVİZYON DATASI (tüm maddeler) ----------
   const revisionItems = [
     { 
       id: 1,
       title: "Kayıt Ekranı: Mevzuat ve Şart Onayları",
-      completed: false,
+      completed: true,
+      completedDate: "08.06.2026",
       hasImage: false,
       imageFile: null,
       details: {
@@ -339,7 +313,8 @@
     { 
       id: 2,
       title: "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası",
-      completed: false,
+      completed: true,
+      completedDate: "08.06.2026",
       hasImage: true,
       imageFile: "2.png",
       details: {
@@ -351,6 +326,7 @@
       id: 3,
       title: "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)",
       completed: false,
+      completedDate: null,
       hasImage: false,
       imageFile: null,
       details: {
@@ -362,6 +338,7 @@
       id: 4,
       title: "Mola Yönetimi: Ardışık Mola Engelleme",
       completed: false,
+      completedDate: null,
       hasImage: false,
       imageFile: null,
       details: {
@@ -371,7 +348,8 @@
     { 
       id: 5,
       title: "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği",
-      completed: false,
+      completed: true,
+      completedDate: "08.06.2026",
       hasImage: true,
       imageFile: "5.png",
       details: {
@@ -383,6 +361,7 @@
       id: 6,
       title: "Mobil Uygulama: Rezervasyon Hatası",
       completed: false,
+      completedDate: null,
       hasImage: true,
       imageFile: "6.jpeg",
       details: {
@@ -394,6 +373,7 @@
       id: 7,
       title: "İkinci Telefon Numarası Zorunluluğu",
       completed: false,
+      completedDate: null,
       hasImage: true,
       imageFile: "7.jpeg",
       details: {
@@ -407,7 +387,6 @@
   const progFill = document.getElementById('progFill');
   const progStats = document.getElementById('progStats');
 
-  // Görsel modal fonksiyonları
   function showImageModal(src, title) {
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
@@ -420,18 +399,17 @@
       modalCaption.textContent = title + " - dosya eksik: " + src;
     };
   }
+
   function closeModal() {
     document.getElementById('imageModal').style.display = 'none';
   }
+
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-  // Akordiyon toggle (sadece tek açılır)
   function toggleItem(headerElem) {
     const detail = headerElem.nextElementSibling;
     const chevron = headerElem.querySelector('.chevron');
     const isOpen = detail.classList.contains('open');
-
-    // Tüm detayları kapat
     document.querySelectorAll('.item-detail.open').forEach(d => {
       d.classList.remove('open');
       const prevHeader = d.previousElementSibling;
@@ -440,14 +418,12 @@
         if (prevChev) prevChev.classList.remove('open');
       }
     });
-
     if (!isOpen) {
       detail.classList.add('open');
       if (chevron) chevron.classList.add('open');
     }
   }
 
-  // İlerleme çubuğunu güncelle
   function updateProgress() {
     const total = revisionItems.length;
     const completedCount = revisionItems.filter(i => i.completed === true).length;
@@ -456,22 +432,22 @@
     progStats.innerText = `${completedCount} / ${total}`;
   }
 
-  // Tüm liste öğelerini oluştur (meta kartları ve notice tamamen kaldırıldı)
   function renderItems() {
     itemsContainer.innerHTML = '';
     revisionItems.forEach((item) => {
       const itemDiv = document.createElement('div');
       itemDiv.className = 'item';
 
-      // HEADER
       const headerDiv = document.createElement('div');
       headerDiv.className = 'item-header';
 
       const leftDiv = document.createElement('div');
       leftDiv.className = 'header-left';
+
       const numSpan = document.createElement('span');
       numSpan.className = 'item-num';
       numSpan.innerText = `${item.id.toString().padStart(2,'0')}`;
+
       const titleSpan = document.createElement('span');
       titleSpan.className = 'item-title';
       if (item.completed) {
@@ -479,6 +455,7 @@
         titleSpan.style.color = 'var(--text-tertiary)';
       }
       titleSpan.innerText = item.title;
+
       leftDiv.appendChild(numSpan);
       leftDiv.appendChild(titleSpan);
 
@@ -491,14 +468,24 @@
         tagSpan.innerText = 'bekliyor';
       }
 
+      // Tamamlanma tarihi rozeti
+      if (item.completed && item.completedDate) {
+        const dateBadge = document.createElement('span');
+        dateBadge.className = 'date-badge';
+        dateBadge.innerHTML = `<i class="ti ti-calendar-check" style="font-size:11px"></i> ${item.completedDate}`;
+        headerDiv.appendChild(leftDiv);
+        headerDiv.appendChild(tagSpan);
+        headerDiv.appendChild(dateBadge);
+      } else {
+        headerDiv.appendChild(leftDiv);
+        headerDiv.appendChild(tagSpan);
+      }
+
       const chevronIcon = document.createElement('i');
       chevronIcon.className = 'ti ti-chevron-down chevron';
-
-      headerDiv.appendChild(leftDiv);
-      headerDiv.appendChild(tagSpan);
       headerDiv.appendChild(chevronIcon);
 
-      // DETAY ALANI
+      // DETAY
       const detailDiv = document.createElement('div');
       detailDiv.className = 'item-detail';
       const innerDiv = document.createElement('div');
@@ -510,7 +497,6 @@
         descP.innerHTML = item.details.description;
         innerDiv.appendChild(descP);
       }
-
       if (item.details.listItems && item.details.listItems.length > 0) {
         const ul = document.createElement('ul');
         ul.className = 'bullet-list';
@@ -521,7 +507,6 @@
         });
         innerDiv.appendChild(ul);
       }
-
       if (item.details.blockquote) {
         const bq = document.createElement('blockquote');
         bq.style.marginTop = '10px';
@@ -532,7 +517,6 @@
         bq.innerHTML = item.details.blockquote;
         innerDiv.appendChild(bq);
       }
-
       if (item.details.extraParagraph) {
         const extraP = document.createElement('p');
         extraP.style.marginTop = '8px';
@@ -541,8 +525,6 @@
         extraP.innerHTML = item.details.extraParagraph;
         innerDiv.appendChild(extraP);
       }
-
-      // Görsel butonu (sadece hasImage true olanlarda)
       if (item.hasImage && item.imageFile) {
         const imgBtn = document.createElement('button');
         imgBtn.className = 'img-btn';
@@ -560,7 +542,6 @@
       itemDiv.appendChild(headerDiv);
       itemDiv.appendChild(detailDiv);
 
-      // header tıklama (akordiyon)
       headerDiv.addEventListener('click', (e) => {
         if (e.target.closest('.img-btn')) return;
         toggleItem(headerDiv);
@@ -570,12 +551,10 @@
     });
   }
 
-  // Başlatma (kaldırılan meta ve notice yok)
   function init() {
     renderItems();
     updateProgress();
   }
-
   init();
 </script>
 </body>

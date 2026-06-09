@@ -157,6 +157,17 @@
     color: #1e7b3a;
     border-color: rgba(40,202,65,0.25);
   }
+  .priority-badge {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px;
+    flex-shrink: 0;
+    background: #ffedea;
+    color: #c2410c;
+    border: 0.5px solid #ffd7cc;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
   .chevron {
     font-size: 16px;
     color: var(--text-tertiary);
@@ -203,7 +214,6 @@
     text-decoration: none;
   }
   .img-btn:hover { background: #005bbf; }
-  /* tamamlanma tarihi rozeti */
   .date-badge {
     font-size: 10px;
     font-weight: 500;
@@ -217,7 +227,6 @@
     align-items: center;
     gap: 4px;
   }
-  /* modal */
   .modal {
     display: none;
     position: fixed;
@@ -272,7 +281,7 @@
 <body>
 <div class="window">
   <div class="titlebar">
-    <div class="win-title">Revizyon ve Eksik Listesi</div>
+    <div class="win-title">Revizyon ve Eksik Listesi · Güncel (6 tamamlandı, 7 bekliyor)</div>
   </div>
   <div class="body">
     <div class="progress-wrap">
@@ -291,12 +300,13 @@
   </div>
 </div>
 <script>
+  // 1-6 tamamlandı, 7 bekliyor (perşembe öncelikli), 8-13 bekliyor
   const revisionItems = [
     { 
       id: 1,
       title: "Kayıt Ekranı: Mevzuat ve Şart Onayları",
       completed: true,
-      completedDate: "08.06.2026",
+      completedDate: "09.06.2026",
       hasImage: false,
       imageFile: null,
       details: {
@@ -314,7 +324,7 @@
       id: 2,
       title: "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası",
       completed: true,
-      completedDate: "08.06.2026",
+      completedDate: "09.06.2026",
       hasImage: true,
       imageFile: "2.png",
       details: {
@@ -325,8 +335,8 @@
     { 
       id: 3,
       title: "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)",
-      completed: false,
-      completedDate: null,
+      completed: true,
+      completedDate: "09.06.2026",
       hasImage: false,
       imageFile: null,
       details: {
@@ -337,8 +347,8 @@
     { 
       id: 4,
       title: "Mola Yönetimi: Ardışık Mola Engelleme",
-      completed: false,
-      completedDate: null,
+      completed: true,
+      completedDate: "09.06.2026",
       hasImage: false,
       imageFile: null,
       details: {
@@ -349,7 +359,7 @@
       id: 5,
       title: "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği",
       completed: true,
-      completedDate: "08.06.2026",
+      completedDate: "09.06.2026",
       hasImage: true,
       imageFile: "5.png",
       details: {
@@ -360,8 +370,8 @@
     { 
       id: 6,
       title: "Mobil Uygulama: Rezervasyon Hatası",
-      completed: false,
-      completedDate: null,
+      completed: true,
+      completedDate: "09.06.2026",
       hasImage: true,
       imageFile: "6.jpeg",
       details: {
@@ -376,9 +386,78 @@
       completedDate: null,
       hasImage: true,
       imageFile: "7.jpeg",
+      priority: true,    // perşembe öncelikli
       details: {
         description: "Kayıt formuna ikinci telefon alanı eklenmeli.",
-        blockquote: "Lütfen ikinci telefon numaranızı giriniz."
+        blockquote: "Lütfen ikinci telefon numaranızı giriniz.",
+        priorityNote: "⚠️ Perşembe günü için önceliklidir. Bu maddenin çözümüne öncelik verilecek."
+      }
+    },
+    { 
+      id: 8,
+      title: "Onay logları",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Kullanıcıların yaptığı tüm onay işlemleri (aydınlatma metni, kurallar vb.) loglanmıyor. Denetim ve izleme için onay logları sisteme eklenmeli."
+      }
+    },
+    { 
+      id: 9,
+      title: "Amfi sıralamada dağınıklık",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Amfi (oturma düzeni) ekranında sıralama algoritması düzgün çalışmıyor, koltuklar veya sıra numaraları karışık görünüyor. Düzenli ve okunabilir bir sıralama yapılmalı."
+      }
+    },
+    { 
+      id: 10,
+      title: "Kullanıcı bilgileri operatörlere de açık olmamalı",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Operatör rollerine tanımlı kişiler, kullanıcıların kişisel verilerini (TC, adres, telefon vb.) görebiliyor. Veriler maskelenmeli veya yetkilendirme kısıtlaması getirilmeli.",
+        blockquote: "Veri gizliliği gereği operatörler yalnızca zorunlu alanları görmeli, hassas bilgiler maskelenmeli."
+      }
+    },
+    { 
+      id: 11,
+      title: "Kiosk slider'ı için haberler servisi (Önce bir API oluşturacağız)",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "📌 NOT: Önce bir API oluşturacağız. Kiosk modunda dönen slider (reklam/duyuru alanı) şu an statik içerik gösteriyor. Dinamik bir haberler servisi entegre edilmeli (RSS veya admin panelinden yönetilebilir haber akışı)."
+      }
+    },
+    { 
+      id: 12,
+      title: "Mobil'de aktif sıra gösteren alanda, her yer dolu olup da beklemeye geçtiğinde buraya yansımıyor",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Mobil uygulamada ‘aktif sıra’ gösterge alanı mevcut fakat tüm koltuklar/sıralar dolu olduğunda ve sistem bekleme moduna geçtiğinde bu durum kullanıcıya bildirilmiyor. Bekleme listesine alındığına dair görsel geri bildirim eklenmeli."
+      }
+    },
+    { 
+      id: 13,
+      title: "Kiosk'da engelleme aktif olmuyor. (Web'de ve mobil'de aktif oluyor)",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Kiosk cihazlarında belirli saatlerde veya kontenjan dolduğunda devreye giren engelleme mekanizması çalışmıyor. Oysa web ve mobil sürümlerde engelleme düzgün işliyor. Kiosk yazılımında aynı kural seti uygulanmalı."
       }
     }
   ];
@@ -468,24 +547,28 @@
         tagSpan.innerText = 'bekliyor';
       }
 
-      // Tamamlanma tarihi rozeti
+      headerDiv.appendChild(leftDiv);
+      headerDiv.appendChild(tagSpan);
+
+      // Öncelik rozeti (sadece 7. madde için perşembe önceliği)
+      if (item.priority && !item.completed) {
+        const priorityBadge = document.createElement('span');
+        priorityBadge.className = 'priority-badge';
+        priorityBadge.innerHTML = '<i class="ti ti-calendar-time" style="font-size:11px"></i> Perşembe öncelikli';
+        headerDiv.appendChild(priorityBadge);
+      }
+
       if (item.completed && item.completedDate) {
         const dateBadge = document.createElement('span');
         dateBadge.className = 'date-badge';
         dateBadge.innerHTML = `<i class="ti ti-calendar-check" style="font-size:11px"></i> ${item.completedDate}`;
-        headerDiv.appendChild(leftDiv);
-        headerDiv.appendChild(tagSpan);
         headerDiv.appendChild(dateBadge);
-      } else {
-        headerDiv.appendChild(leftDiv);
-        headerDiv.appendChild(tagSpan);
       }
 
       const chevronIcon = document.createElement('i');
       chevronIcon.className = 'ti ti-chevron-down chevron';
       headerDiv.appendChild(chevronIcon);
 
-      // DETAY
       const detailDiv = document.createElement('div');
       detailDiv.className = 'item-detail';
       const innerDiv = document.createElement('div');
@@ -516,6 +599,19 @@
         bq.style.color = 'var(--text-secondary)';
         bq.innerHTML = item.details.blockquote;
         innerDiv.appendChild(bq);
+      }
+      if (item.details.priorityNote) {
+        const priorityNoteDiv = document.createElement('div');
+        priorityNoteDiv.style.marginTop = '10px';
+        priorityNoteDiv.style.padding = '8px 12px';
+        priorityNoteDiv.style.background = '#ffedea';
+        priorityNoteDiv.style.borderRadius = '8px';
+        priorityNoteDiv.style.fontSize = '12px';
+        priorityNoteDiv.style.fontWeight = '500';
+        priorityNoteDiv.style.color = '#c2410c';
+        priorityNoteDiv.style.border = '0.5px solid #ffd7cc';
+        priorityNoteDiv.innerHTML = '⏰ ' + item.details.priorityNote;
+        innerDiv.appendChild(priorityNoteDiv);
       }
       if (item.details.extraParagraph) {
         const extraP = document.createElement('p');

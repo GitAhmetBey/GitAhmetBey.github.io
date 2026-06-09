@@ -300,7 +300,7 @@
   </div>
 </div>
 <script>
-  // 1-6 tamamlandı, 7 bekliyor (perşembe öncelikli), 8-13 bekliyor
+  // 1-6 tamamlandı, 7 bekliyor (perşembe öncelikli - acil durum irtibat kişisi)
   const revisionItems = [
     { 
       id: 1,
@@ -381,15 +381,15 @@
     },
     { 
       id: 7,
-      title: "İkinci Telefon Numarası Zorunluluğu",
+      title: "Acil durumda irtibat kurulacak kişi bilgisi (isim + telefon) zorunluluğu",
       completed: false,
       completedDate: null,
       hasImage: true,
       imageFile: "7.jpeg",
-      priority: true,    // perşembe öncelikli
+      priority: true,
       details: {
-        description: "Kayıt formuna ikinci telefon alanı eklenmeli.",
-        blockquote: "Lütfen ikinci telefon numaranızı giriniz.",
+        description: "Kayıt ve üye düzenleme formlarına acil durumda aranacak kişiye ait isim ve telefon numarası alanları eklenmeli. Bu alanlar zorunlu olmalıdır. (İkinci telefon yerine geçer)",
+        blockquote: "Acil durum irtibat kişisi adı ve telefonu girilmeden kayıt tamamlanamamalıdır.",
         priorityNote: "⚠️ Perşembe günü için önceliklidir. Bu maddenin çözümüne öncelik verilecek."
       }
     },
@@ -429,13 +429,13 @@
     },
     { 
       id: 11,
-      title: "Kiosk slider'ı için haberler servisi (Önce bir API oluşturacağız)",
+      title: "Kiosk slider'ı için haberler servisi (Önce biz bir API oluşturacağız)",
       completed: false,
       completedDate: null,
       hasImage: false,
       imageFile: null,
       details: {
-        description: "📌 NOT: Önce bir API oluşturacağız. Kiosk modunda dönen slider (reklam/duyuru alanı) şu an statik içerik gösteriyor. Dinamik bir haberler servisi entegre edilmeli (RSS veya admin panelinden yönetilebilir haber akışı)."
+        description: "📌 NOT: Önce biz bir API oluşturacağız. Kiosk modunda dönen slider (reklam/duyuru alanı) şu an statik içerik gösteriyor. Dinamik bir haberler servisi entegre edilmeli (RSS veya admin panelinden yönetilebilir haber akışı)."
       }
     },
     { 
@@ -446,18 +446,18 @@
       hasImage: false,
       imageFile: null,
       details: {
-        description: "Mobil uygulamada ‘aktif sıra’ gösterge alanı mevcut fakat tüm koltuklar/sıralar dolu olduğunda ve sistem bekleme moduna geçtiğinde bu durum kullanıcıya bildirilmiyor. Bekleme listesine alındığına dair görsel geri bildirim eklenmeli."
+        description: "Mobil'de aktif sıra gösteren alanda, her yer dolu olup da beklemeye geçtiğinde buraya yansımıyor"
       }
     },
     { 
       id: 13,
-      title: "Kiosk'da engelleme aktif olmuyor. (Web'de ve mobil'de aktif oluyor)",
+      title: "Kiosk'da kullancı engelleme aktif olmuyor. (Web'de ve mobil'de aktif oluyor)",
       completed: false,
       completedDate: null,
       hasImage: false,
       imageFile: null,
       details: {
-        description: "Kiosk cihazlarında belirli saatlerde veya kontenjan dolduğunda devreye giren engelleme mekanizması çalışmıyor. Oysa web ve mobil sürümlerde engelleme düzgün işliyor. Kiosk yazılımında aynı kural seti uygulanmalı."
+        description: "Kiosk'da kullancı engelleme aktif olmuyor. (Web'de ve mobil'de aktif oluyor)"
       }
     }
   ];
@@ -550,7 +550,6 @@
       headerDiv.appendChild(leftDiv);
       headerDiv.appendChild(tagSpan);
 
-      // Öncelik rozeti (sadece 7. madde için perşembe önceliği)
       if (item.priority && !item.completed) {
         const priorityBadge = document.createElement('span');
         priorityBadge.className = 'priority-badge';

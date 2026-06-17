@@ -242,6 +242,770 @@
     gap: 8px;
   }
   .user-list i { margin-top: 1px; flex-shrink: 0; }
+  .priority-badge-medium {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px;
+    flex-shrink: 0;
+    background: #fff8ec;
+    color: #a05a00;
+    border: 0.5px solid rgba(160,90,0,0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.85);
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .modal-content {
+    max-width: 90%; max-height: 90%;
+    background: transparent;
+    position: relative;
+  }
+  .modal-content img {
+    max-width: 100%; max-height: 80vh;
+    border-radius: 12px;
+    box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+  }
+  .close-modal {
+    position: absolute;
+    top: -40px; right: 0;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    background: rgba(0,0,0,0.5);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-caption {
+    text-align: center;
+    color: white;
+    margin-top: 12px;
+    font-size: 14px;
+    background: rgba(0,0,0,0.6);
+    padding: 6px 16px;
+    border-radius: 30px;
+    display: inline-block;
+  }
+  .caption-wrapper { text-align: center; }
+  @media (max-width: 600px) {
+    body { padding: 12px 8px; }
+    .window { border-radius: 10px; }
+    .body { padding: 16px 12px; }
+    .item-header { padding: 10px 12px; gap: 6px; flex-wrap: wrap; }
+    .header-left { width: 100%; }
+    .item-title { font-size: 13px; white-space: normal; word-break: break-word; }
+    .item-num { width: 22px; font-size: 11px; }
+    .tag, .priority-badge, .date-badge { font-size: 10px; }
+    .item-detail-inner { padding: 12px 12px 16px 12px; }
+    .progress-wrap { gap: 8px; padding: 8px 10px; }
+    .progress-label { font-size: 11px; }
+    .win-title { font-size: 12px; }
+    .img-btn { font-size: 11px; padding: 5px 12px; }
+    .bullet-list li { font-size: 12px; }
+    .item-desc { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="win-title">Revizyon ve Eksik Listesi · Güncel (6 tamamlandı, 10 bekliyor)</div>
+  </div>
+  <div class="body">
+    <div class="progress-wrap">
+      <span class="progress-label">✅ Tamamlanma durumu</span>
+      <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+      <span class="progress-stats" id="progStats">0 / 0</span>
+    </div>
+    <div class="items" id="itemsContainer"></div>
+  </div>
+</div>
+<div id="imageModal" class="modal" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="close-modal" onclick="closeModal()">&times;</span>
+    <img id="modalImage" src="" alt="revizyon görseli">
+    <div class="caption-wrapper"><div class="modal-caption" id="modalCaption"></div></div>
+  </div>
+</div>
+<script>
+  const revisionItems = [
+    { 
+      id: 1,
+      title: "Kayıt Ekranı: Mevzuat ve Şart Onayları",
+      completed: true,
+      completedDate: "09.06.2026",
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Kayıt formuna zorunlu onay kutuları eklenmeli; \"Kayıt Ol\" butonu bunlar işaretlenmeden aktif olmamalıdır. Her onay metni ilgili dokümana yönlendiren dinamik bir bağlantı içermelidir.",
+        listItems: [
+          "Aydınlatma Metni'ni okudum ve kabul ediyorum.",
+          "Kütüphane Giriş-Çıkış-Mola ve Güvenlik Kuralları'nı okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/CweDp2j3P5pHw9D' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>",
+          "Genel Davranış Kuralları'nı okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/fDyg5PNStQfC79p' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>",
+          "Masa Bilgilendirme Kartı metnini okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/frNgT5BGZ4X3dD7' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>",
+          "Kitap Ödünç Alma ve İade İşlemleri kurallarını okudum, kabul ediyorum. — <a href='https://bulut.malatya.bel.tr/index.php/s/baZPfPA3ZBCAaH5' target='_blank' rel='noopener noreferrer'>Dokümanı Aç</a>"
+        ]
+      }
+    },
+    { 
+      id: 2,
+      title: "Portal Sayfası: Eğitim Durumu Veri Çekme Hatası",
+      completed: true,
+      completedDate: "09.06.2026",
+      hasImage: true,
+      imageFile: "2.png",
+      details: {
+        description: "Eğitim durumu bilgisi sisteme hatalı yansımaktadır.",
+        extraParagraph: "Veritabanı ile arayüz eşleşmesi sağlanmalıdır."
+      }
+    },
+    { 
+      id: 3,
+      title: "Kayıt Kısıtlaması: Yaş Sınırı Kontrolü (+15)",
+      completed: true,
+      completedDate: "09.06.2026",
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "15 yaşından küçüklerin kaydı engellenmelidir.",
+        blockquote: "En az 15 yaşında olmalısınız."
+      }
+    },
+    { 
+      id: 4,
+      title: "Mola Yönetimi: Ardışık Mola Engelleme",
+      completed: true,
+      completedDate: "09.06.2026",
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Mola bitişi ile yeni mola arasında süre kısıtlaması eklenmeli."
+      }
+    },
+    { 
+      id: 5,
+      title: "Yönetim Paneli: Üyelik Düzenleme Özelliği Eksikliği",
+      completed: true,
+      completedDate: "09.06.2026",
+      hasImage: true,
+      imageFile: "5.png",
+      details: {
+        description: "Üye bilgileri düzenlenemiyor. Üyelik düzenleme özelliği eklenmeli.",
+        blockquote: "Üyelik düzenleme özelliği eklenmemiştir."
+      }
+    },
+    { 
+      id: 6,
+      title: "Mobil Uygulama: Rezervasyon Hatası",
+      completed: true,
+      completedDate: "09.06.2026",
+      hasImage: true,
+      imageFile: "6.jpeg",
+      details: {
+        description: "Uygun saatler bulunamadı hatası alınıyor.",
+        blockquote: "Uygun saatler bulunamadı."
+      }
+    },
+    { 
+      id: 7,
+      title: "Acil durumda irtibat kurulacak kişi bilgisi (isim + telefon) zorunluluğu",
+      completed: false,
+      completedDate: null,
+      hasImage: true,
+      imageFile: "7.jpeg",
+      priority: true,
+      details: {
+        description: "Kayıt ve üye düzenleme formlarına acil durumda aranacak kişiye ait isim ve telefon numarası alanları eklenmeli. Bu alanlar zorunlu olmalıdır. (İkinci telefon yerine geçer)",
+        blockquote: "Acil durum irtibat kişisi adı ve telefonu girilmeden kayıt tamamlanamamalıdır.",
+        priorityNote: "Bu maddenin çözümüne öncelik verilecek."
+      }
+    },
+    { 
+      id: 8,
+      title: "Onay logları",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Kullanıcıların yaptığı tüm onay işlemleri (aydınlatma metni, kurallar vb.) loglanmıyor. Denetim ve izleme için onay logları sisteme eklenmeli."
+      }
+    },
+    { 
+      id: 9,
+      title: "Amfi sıralamada dağınıklık",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Amfi (oturma düzeni) ekranında sıralama algoritması düzgün çalışmıyor, koltuklar veya sıra numaraları karışık görünüyor. Düzenli ve okunabilir bir sıralama yapılmalı."
+      }
+    },
+    { 
+      id: 10,
+      title: "Kullanıcı bilgileri operatörlere de açık olmamalı",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Operatör rollerine tanımlı kişiler, kullanıcıların kişisel verilerini (TC, adres, telefon vb.) görebiliyor. Veriler maskelenmeli veya yetkilendirme kısıtlaması getirilmeli.",
+        blockquote: "Veri gizliliği gereği operatörler yalnızca zorunlu alanları görmeli, hassas bilgiler maskelenmeli."
+      }
+    },
+    { 
+      id: 11,
+      title: "Kiosk slider'ı için haberler servisi (Önce biz bir API oluşturacağız)",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "📌 NOT: Önce biz bir API oluşturacağız. Kiosk modunda dönen slider (reklam/duyuru alanı) şu an statik içerik gösteriyor. Dinamik bir haberler servisi entegre edilmeli (RSS veya admin panelinden yönetilebilir haber akışı)."
+      }
+    },
+    { 
+      id: 12,
+      title: "Mobil'de aktif sıra gösteren alanda, her yer dolu olup da beklemeye geçtiğinde buraya yansımıyor",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Mobil'de aktif sıra gösteren alanda, her yer dolu olup da beklemeye geçtiğinde buraya yansımıyor."
+      }
+    },
+    { 
+      id: 13,
+      title: "Kiosk'da kullanıcı engelleme aktif olmuyor (Web'de ve mobil'de aktif oluyor)",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      details: {
+        description: "Kiosk'da kullanıcı engelleme aktif olmuyor. (Web'de ve mobil'de aktif oluyor)"
+      }
+    },
+    { 
+      id: 14,
+      title: "iOS'da bildirim gitmiyor",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFile: null,
+      priority: true,
+      details: {
+        description: "iOS cihazlarda push bildirimleri kullanıcılara ulaşmıyor. Android ve web tarafında sorun bulunmuyor. iOS bildirim altyapısı (APNs entegrasyonu) kontrol edilmeli ve düzeltilmeli.",
+        blockquote: "iOS kullanıcıları hiçbir bildirim almıyor; sorun yalnızca iOS platformuna özgüdür.",
+        priorityNote: "Bu maddenin çözümüne öncelik verilecek."
+      }
+    },
+    { 
+      id: 15,
+      title: "Moladan erken dönen kullanıcılara hatalı ceza kesiliyor",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      priority: true,
+      priorityLevel: "medium",
+      imageFiles: ["8.jpeg", "9.jpeg"],
+      details: {
+        description: "Bazı kullanıcılar molalarından erken dönmelerine rağmen sistem tarafından ceza uygulanmaktadır. Bu durumun gerçekten yaşanıp yaşanmadığı doğrulanmalı; ceza mantığı gözden geçirilmeli ve erken dönüş senaryoları için kontrol mekanizması eklenmeli.",
+        blockquote: "Moladan erken dönüş ceza tetikleyici olarak sayılmamalıdır; yalnızca gerçek ihlaller (geç dönüş vb.) cezalandırılmalıdır.",
+        affectedUsers: ["Eslem Sümmeye Eylül", "Hayrunisa AYDIN"]
+      }
+    }
+    ,{ 
+      id: 16,
+      title: "Mobil uygulamada doluluk oranları sayfasında grafiklere istatistik uygulanamıyor",
+      completed: false,
+      completedDate: null,
+      hasImage: false,
+      imageFiles: ["10.jpeg"],
+      details: {
+        description: "Mobil uygulamada doluluk oranları sayfasındaki grafikler her zaman sabit görünüyor; tarih aralığı, filtre veya diğer istatistik seçenekleri uygulandığında grafik güncellenmiyor. Dinamik veri yenileme ve filtre entegrasyonu sağlanmalı.",
+        blockquote: "Grafik sabit kalmamalı; seçilen istatistik/filtre parametrelerine göre dinamik olarak güncellenmelidir."
+      }
+    }
+  ];
+
+  const itemsContainer = document.getElementById('itemsContainer');
+  const progFill = document.getElementById('progFill');
+  const progStats = document.getElementById('progStats');
+
+  function showImageModal(src, title) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    modalImg.src = src;
+    modalCaption.textContent = title + " (görsel)";
+    modal.style.display = 'flex';
+    modalImg.onerror = function() {
+      modalImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="250"%3E%3Crect width="400" height="250" fill="%23fee2e2"/%3E%3Ctext x="200" y="130" text-anchor="middle" fill="%23b91c1c" font-size="14"%3EGörsel bulunamadı: ' + encodeURIComponent(src) + '%3C/text%3E%3C/svg%3E';
+      modalCaption.textContent = title + " - dosya eksik: " + src;
+    };
+  }
+
+  function closeModal() {
+    document.getElementById('imageModal').style.display = 'none';
+  }
+
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  function toggleItem(headerElem) {
+    const detail = headerElem.nextElementSibling;
+    const chevron = headerElem.querySelector('.chevron');
+    const isOpen = detail.classList.contains('open');
+    document.querySelectorAll('.item-detail.open').forEach(d => {
+      d.classList.remove('open');
+      const prevHeader = d.previousElementSibling;
+      if (prevHeader) {
+        const prevChev = prevHeader.querySelector('.chevron');
+        if (prevChev) prevChev.classList.remove('open');
+      }
+    });
+    if (!isOpen) {
+      detail.classList.add('open');
+      if (chevron) chevron.classList.add('open');
+    }
+  }
+
+  function updateProgress() {
+    const total = revisionItems.length;
+    const completedCount = revisionItems.filter(i => i.completed === true).length;
+    const percent = total === 0 ? 0 : (completedCount / total) * 100;
+    progFill.style.width = `${percent}%`;
+    progStats.innerText = `${completedCount} / ${total}`;
+  }
+
+  function renderItems() {
+    itemsContainer.innerHTML = '';
+    revisionItems.forEach((item) => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'item';
+
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'item-header';
+
+      const leftDiv = document.createElement('div');
+      leftDiv.className = 'header-left';
+
+      const numSpan = document.createElement('span');
+      numSpan.className = 'item-num';
+      numSpan.innerText = `${item.id.toString().padStart(2,'0')}`;
+
+      const titleSpan = document.createElement('span');
+      titleSpan.className = 'item-title';
+      if (item.completed) {
+        titleSpan.style.textDecoration = 'line-through';
+        titleSpan.style.color = 'var(--text-tertiary)';
+      }
+      titleSpan.innerText = item.title;
+
+      leftDiv.appendChild(numSpan);
+      leftDiv.appendChild(titleSpan);
+
+      const tagSpan = document.createElement('span');
+      tagSpan.className = 'tag';
+      if (item.completed) {
+        tagSpan.classList.add('tag-done');
+        tagSpan.innerText = 'tamamlandı';
+      } else {
+        tagSpan.innerText = 'bekliyor';
+      }
+
+      headerDiv.appendChild(leftDiv);
+      headerDiv.appendChild(tagSpan);
+
+      if (item.priority && !item.completed) {
+        const priorityBadge = document.createElement('span');
+        if (item.priorityLevel === 'medium') {
+          priorityBadge.className = 'priority-badge-medium';
+          priorityBadge.innerHTML = '<i class="ti ti-alert-circle" style="font-size:11px"></i> Orta öncelikli';
+        } else {
+          priorityBadge.className = 'priority-badge';
+          priorityBadge.innerHTML = '<i class="ti ti-alert-triangle" style="font-size:11px"></i> Öncelikli';
+        }
+        headerDiv.appendChild(priorityBadge);
+      }
+
+      if (item.completed && item.completedDate) {
+        const dateBadge = document.createElement('span');
+        dateBadge.className = 'date-badge';
+        dateBadge.innerHTML = `<i class="ti ti-calendar-check" style="font-size:11px"></i> ${item.completedDate}`;
+        headerDiv.appendChild(dateBadge);
+      }
+
+      const chevronIcon = document.createElement('i');
+      chevronIcon.className = 'ti ti-chevron-down chevron';
+      headerDiv.appendChild(chevronIcon);
+
+      const detailDiv = document.createElement('div');
+      detailDiv.className = 'item-detail';
+      const innerDiv = document.createElement('div');
+      innerDiv.className = 'item-detail-inner';
+
+      if (item.details.description) {
+        const descP = document.createElement('div');
+        descP.className = 'item-desc';
+        descP.innerHTML = item.details.description;
+        innerDiv.appendChild(descP);
+      }
+      if (item.details.listItems && item.details.listItems.length > 0) {
+        const ul = document.createElement('ul');
+        ul.className = 'bullet-list';
+        item.details.listItems.forEach(liText => {
+          const li = document.createElement('li');
+          li.innerHTML = liText;
+          ul.appendChild(li);
+        });
+        innerDiv.appendChild(ul);
+      }
+      if (item.details.blockquote) {
+        const bq = document.createElement('blockquote');
+        bq.style.marginTop = '10px';
+        bq.style.borderLeft = '3px solid var(--border-med)';
+        bq.style.paddingLeft = '12px';
+        bq.style.fontSize = '13px';
+        bq.style.color = 'var(--text-secondary)';
+        bq.innerHTML = item.details.blockquote;
+        innerDiv.appendChild(bq);
+      }
+      if (item.details.affectedUsers && item.details.affectedUsers.length > 0) {
+        const userDiv = document.createElement('div');
+        userDiv.className = 'user-list';
+        userDiv.innerHTML = '<i class="ti ti-users" style="font-size:13px"></i><span><strong>Etkilenen kullanıcılar:</strong> ' + item.details.affectedUsers.join(', ') + '</span>';
+        innerDiv.appendChild(userDiv);
+      }
+      if (item.details.priorityNote) {
+        const priorityNoteDiv = document.createElement('div');
+        priorityNoteDiv.style.marginTop = '10px';
+        priorityNoteDiv.style.padding = '8px 12px';
+        priorityNoteDiv.style.background = '#ffedea';
+        priorityNoteDiv.style.borderRadius = '8px';
+        priorityNoteDiv.style.fontSize = '12px';
+        priorityNoteDiv.style.fontWeight = '500';
+        priorityNoteDiv.style.color = '#c2410c';
+        priorityNoteDiv.style.border = '0.5px solid #ffd7cc';
+        priorityNoteDiv.innerHTML = '⏰ ' + item.details.priorityNote;
+        innerDiv.appendChild(priorityNoteDiv);
+      }
+      if (item.details.extraParagraph) {
+        const extraP = document.createElement('p');
+        extraP.style.marginTop = '8px';
+        extraP.style.fontSize = '13px';
+        extraP.style.color = 'var(--text-secondary)';
+        extraP.innerHTML = item.details.extraParagraph;
+        innerDiv.appendChild(extraP);
+      }
+
+      // Tekli görsel
+      if (item.hasImage && item.imageFile && !item.imageFiles) {
+        const imgBtn = document.createElement('button');
+        imgBtn.className = 'img-btn';
+        imgBtn.innerHTML = '<i class="ti ti-photo" style="font-size:12px"></i> Görseli Göster';
+        imgBtn.onclick = (function(file, title) {
+          return function(e) {
+            e.stopPropagation();
+            showImageModal(file, title);
+          };
+        })(item.imageFile, item.title);
+        innerDiv.appendChild(imgBtn);
+      }
+
+      // Çoklu görsel (14. madde gibi)
+      if (item.imageFiles && item.imageFiles.length > 0) {
+        const btnWrap = document.createElement('div');
+        btnWrap.style.marginTop = '12px';
+        item.imageFiles.forEach((file, idx) => {
+          const imgBtn = document.createElement('button');
+          imgBtn.className = 'img-btn';
+          imgBtn.innerHTML = `<i class="ti ti-photo" style="font-size:12px"></i> Görsel ${idx + 1}`;
+          imgBtn.onclick = (function(f, t) {
+            return function(e) {
+              e.stopPropagation();
+              showImageModal(f, t);
+            };
+          })(file, item.title + ' — Görsel ' + (idx + 1));
+          btnWrap.appendChild(imgBtn);
+        });
+        innerDiv.appendChild(btnWrap);
+      }
+
+      detailDiv.appendChild(innerDiv);
+      itemDiv.appendChild(headerDiv);
+      itemDiv.appendChild(detailDiv);
+
+      headerDiv.addEventListener('click', (e) => {
+        if (e.target.closest('.img-btn')) return;
+        toggleItem(headerDiv);
+      });
+
+      itemsContainer.appendChild(itemDiv);
+    });
+  }
+
+  function init() {
+    renderItems();
+    updateProgress();
+  }
+  init();
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revizyon ve Eksik Listesi · Akordiyon Mac Tema</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f5f5f7;
+    --win-bg: #ffffff;
+    --surface: #f2f2f2;
+    --border: rgba(0,0,0,0.10);
+    --border-med: rgba(0,0,0,0.18);
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #aeaeb2;
+    --blue: #0071e3;
+    --blue-bg: #e8f1fb;
+    --blue-text: #0051a8;
+    --warn-bg: #fff8ec;
+    --warn-text: #a05a00;
+    --warn-border: rgba(160,90,0,0.18);
+    --danger-bg: #fff0f0;
+    --danger-text: #c0392b;
+    --success: #28ca41;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .window {
+    width: 100%;
+    max-width: 1400px;
+
+    background: var(--win-bg);
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--border);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08), 0 0.5px 2px rgba(0,0,0,0.06);
+    overflow: visible;
+  }
+  .titlebar {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: 12px 16px;
+    text-align: center;
+    user-select: none;
+  }
+  .win-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+  }
+  .body { 
+    padding: 32px 28px;
+    min-height: calc(100vh - 60px);
+  }
+  .progress-wrap {
+    margin: 0 0 28px 0;
+    background: var(--surface);
+    border-radius: 28px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .progress-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+    min-width: 140px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 20px;
+    width: 0%;
+    transition: width 0.2s;
+  }
+  .progress-stats {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .items { display: flex; flex-direction: column; gap: 8px; }
+  .item {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--win-bg);
+    transition: border-color 0.15s;
+  }
+  .item:hover { border-color: var(--border-med); }
+  .item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    cursor: pointer;
+    gap: 12px;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .item-header:hover { background: var(--surface); }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+  .item-num {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    width: 28px;
+    font-weight: 500;
+  }
+  .item-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tag {
+    font-size: 10px; font-weight: 500;
+    padding: 2px 8px; border-radius: 20px;
+    flex-shrink: 0;
+    background: var(--warn-bg);
+    color: var(--warn-text);
+    border: 0.5px solid var(--warn-border);
+  }
+  .tag-done {
+    background: #e7f7ed;
+    color: #1e7b3a;
+    border-color: rgba(40,202,65,0.25);
+  }
+  .priority-badge {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px;
+    flex-shrink: 0;
+    background: #ffedea;
+    color: #c2410c;
+    border: 0.5px solid #ffd7cc;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .chevron {
+    font-size: 16px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  .chevron.open { transform: rotate(180deg); }
+  .item-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    border-top: 0px solid var(--border);
+  }
+  .item-detail.open {
+    max-height: 800px;
+    border-top-width: 0.5px;
+  }
+  .item-detail-inner { padding: 14px 20px 18px 48px; }
+  .item-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .bullet-list { margin-top: 10px; padding-left: 18px; }
+  .bullet-list li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    list-style: disc;
+  }
+  .bullet-list a { color: var(--blue); text-decoration: none; }
+  .bullet-list a:hover { text-decoration: underline; }
+  .img-btn {
+    margin-top: 12px;
+    font-size: 11px; font-weight: 500;
+    color: white;
+    background: var(--blue);
+    display: inline-flex; align-items: center; gap: 6px;
+    cursor: pointer;
+    border: none;
+    border-radius: 30px;
+    padding: 6px 16px;
+    transition: background 0.2s;
+    text-decoration: none;
+    margin-right: 8px;
+  }
+  .img-btn:hover { background: #005bbf; }
+  .date-badge {
+    font-size: 10px;
+    font-weight: 500;
+    color: #1e7b3a;
+    background: #e7f7ed;
+    border: 0.5px solid rgba(40,202,65,0.25);
+    border-radius: 20px;
+    padding: 2px 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .user-list {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #fff8ec;
+    border: 0.5px solid rgba(160,90,0,0.18);
+    border-radius: 8px;
+    font-size: 12px;
+    color: #a05a00;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .user-list i { margin-top: 1px; flex-shrink: 0; }
   .modal {
     display: none;
     position: fixed;

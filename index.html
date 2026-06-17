@@ -182,7 +182,7 @@
     border-top: 0px solid var(--border);
   }
   .item-detail.open {
-    max-height: 620px;
+    max-height: 800px;
     border-top-width: 0.5px;
   }
   .item-detail-inner { padding: 14px 20px 18px 48px; }
@@ -212,6 +212,7 @@
     padding: 6px 16px;
     transition: background 0.2s;
     text-decoration: none;
+    margin-right: 8px;
   }
   .img-btn:hover { background: #005bbf; }
   .date-badge {
@@ -227,6 +228,20 @@
     align-items: center;
     gap: 4px;
   }
+  .user-list {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #fff8ec;
+    border: 0.5px solid rgba(160,90,0,0.18);
+    border-radius: 8px;
+    font-size: 12px;
+    color: #a05a00;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .user-list i { margin-top: 1px; flex-shrink: 0; }
   .modal {
     display: none;
     position: fixed;
@@ -281,7 +296,7 @@
 <body>
 <div class="window">
   <div class="titlebar">
-    <div class="win-title">Revizyon ve Eksik Listesi · Güncel (6 tamamlandı, 7 bekliyor)</div>
+    <div class="win-title">Revizyon ve Eksik Listesi · Güncel (6 tamamlandı, 8 bekliyor)</div>
   </div>
   <div class="body">
     <div class="progress-wrap">
@@ -300,7 +315,6 @@
   </div>
 </div>
 <script>
-  // 1-6 tamamlandı, 7 bekliyor (perşembe öncelikli - acil durum irtibat kişisi)
   const revisionItems = [
     { 
       id: 1,
@@ -446,18 +460,31 @@
       hasImage: false,
       imageFile: null,
       details: {
-        description: "Mobil'de aktif sıra gösteren alanda, her yer dolu olup da beklemeye geçtiğinde buraya yansımıyor"
+        description: "Mobil'de aktif sıra gösteren alanda, her yer dolu olup da beklemeye geçtiğinde buraya yansımıyor."
       }
     },
     { 
       id: 13,
-      title: "Kiosk'da kullancı engelleme aktif olmuyor. (Web'de ve mobil'de aktif oluyor)",
+      title: "Kiosk'da kullanıcı engelleme aktif olmuyor (Web'de ve mobil'de aktif oluyor)",
       completed: false,
       completedDate: null,
       hasImage: false,
       imageFile: null,
       details: {
-        description: "Kiosk'da kullancı engelleme aktif olmuyor. (Web'de ve mobil'de aktif oluyor)"
+        description: "Kiosk'da kullanıcı engelleme aktif olmuyor. (Web'de ve mobil'de aktif oluyor)"
+      }
+    },
+    { 
+      id: 14,
+      title: "Moladan erken dönen kullanıcılara hatalı ceza kesiliyor",
+      completed: false,
+      completedDate: null,
+      hasImage: true,
+      imageFiles: ["8.jpeg", "9.jpeg"],
+      details: {
+        description: "Bazı kullanıcılar molalarından erken dönmelerine rağmen sistem tarafından ceza uygulanmaktadır. Bu durumun gerçekten yaşanıp yaşanmadığı doğrulanmalı; ceza mantığı gözden geçirilmeli ve erken dönüş senaryoları için kontrol mekanizması eklenmeli.",
+        blockquote: "Moladan erken dönüş ceza tetikleyici olarak sayılmamalıdır; yalnızca gerçek ihlaller (geç dönüş vb.) cezalandırılmalıdır.",
+        affectedUsers: ["Eslem Sümmeye Eylül", "Hayrunisa AYDIN"]
       }
     }
   ];
@@ -474,7 +501,7 @@
     modalCaption.textContent = title + " (görsel)";
     modal.style.display = 'flex';
     modalImg.onerror = function() {
-      modalImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="250"%3E%3Crect width="400" height="250" fill="%23fee2e2"/%3E%3Ctext x="200" y="130" text-anchor="middle" fill="%23b91c1c" font-size="14"%3EGörsel bulunamadı: ' + src + '%3C/text%3E%3C/svg%3E';
+      modalImg.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="250"%3E%3Crect width="400" height="250" fill="%23fee2e2"/%3E%3Ctext x="200" y="130" text-anchor="middle" fill="%23b91c1c" font-size="14"%3EGörsel bulunamadı: ' + encodeURIComponent(src) + '%3C/text%3E%3C/svg%3E';
       modalCaption.textContent = title + " - dosya eksik: " + src;
     };
   }
@@ -599,6 +626,12 @@
         bq.innerHTML = item.details.blockquote;
         innerDiv.appendChild(bq);
       }
+      if (item.details.affectedUsers && item.details.affectedUsers.length > 0) {
+        const userDiv = document.createElement('div');
+        userDiv.className = 'user-list';
+        userDiv.innerHTML = '<i class="ti ti-users" style="font-size:13px"></i><span><strong>Etkilenen kullanıcılar:</strong> ' + item.details.affectedUsers.join(', ') + '</span>';
+        innerDiv.appendChild(userDiv);
+      }
       if (item.details.priorityNote) {
         const priorityNoteDiv = document.createElement('div');
         priorityNoteDiv.style.marginTop = '10px';
@@ -620,7 +653,9 @@
         extraP.innerHTML = item.details.extraParagraph;
         innerDiv.appendChild(extraP);
       }
-      if (item.hasImage && item.imageFile) {
+
+      // Tekli görsel
+      if (item.hasImage && item.imageFile && !item.imageFiles) {
         const imgBtn = document.createElement('button');
         imgBtn.className = 'img-btn';
         imgBtn.innerHTML = '<i class="ti ti-photo" style="font-size:12px"></i> Görseli Göster';
@@ -631,6 +666,25 @@
           };
         })(item.imageFile, item.title);
         innerDiv.appendChild(imgBtn);
+      }
+
+      // Çoklu görsel (14. madde gibi)
+      if (item.imageFiles && item.imageFiles.length > 0) {
+        const btnWrap = document.createElement('div');
+        btnWrap.style.marginTop = '12px';
+        item.imageFiles.forEach((file, idx) => {
+          const imgBtn = document.createElement('button');
+          imgBtn.className = 'img-btn';
+          imgBtn.innerHTML = `<i class="ti ti-photo" style="font-size:12px"></i> Görsel ${idx + 1}`;
+          imgBtn.onclick = (function(f, t) {
+            return function(e) {
+              e.stopPropagation();
+              showImageModal(f, t);
+            };
+          })(file, item.title + ' — Görsel ' + (idx + 1));
+          btnWrap.appendChild(imgBtn);
+        });
+        innerDiv.appendChild(btnWrap);
       }
 
       detailDiv.appendChild(innerDiv);
